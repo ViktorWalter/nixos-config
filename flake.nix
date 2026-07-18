@@ -16,9 +16,15 @@
       inputs.nixpkgs.follows = "nixpkgs-old";
     };
 
+    #htop-vim = {
+    #  url = "github:KoffeinFlummi/htop-vim";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
+
+
   };
 
-  outputs = { self, nixpkgs, nixpkgs-old, home-manager, athame-flake, ... }:
+  outputs = { self, nixpkgs, nixpkgs-old, home-manager, athame-flake,  ... }:
     let
  	    system = "x86_64-linux";
 

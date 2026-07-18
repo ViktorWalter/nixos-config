@@ -14,9 +14,9 @@
       update = "sudo nixos-rebuild switch";
     };
 
-    localVariables = {
-      USE_ATHAME = true;
-    };
+    initExtra = ''
+      export USE_ATHAME="true"
+    '';
 
     oh-my-zsh = { # "ohMyZsh" without Home Manager
       enable = true;
