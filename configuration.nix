@@ -117,7 +117,7 @@
     git
     hyfetch
     ranger
-    xorg.xlsfonts
+    xlsfonts
     hyfetch
   ];
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);

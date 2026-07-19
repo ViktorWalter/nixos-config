@@ -44,6 +44,7 @@
           modules = [
             { nixpkgs.overlays = [ athameOverlay ]; }
             ./configuration.nix
+
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -51,6 +52,12 @@
               home-manager.extraSpecialArgs = { inherit hostName athame-flake; }; 
               home-manager.users.viktor = import ./home.nix;
             }
+
+            ({ pkgs, ... }: {
+             systemd.tmpfiles.rules = [
+             "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
+             ];
+             })
           ];
         };
       in {
