@@ -1,0 +1,30 @@
+for_window [class="session"] move to workspace number 7
+
+for_window [class="MATLAB R2015a" title="^Fig"] no_focus
+for_window [class="MATLAB R2015a" title="^Fig"] move to workspace number 3
+for_window [class="gazebo"] move to workspace number 3
+for_window [class="rviz"] move to workspace number 8
+
+for_window [window_role="teams"] move to workspace number 7
+
+for_window [ title="^pdfpc - presentation" ] move to number 8
+for_window [ title="^pdfpc - presentation" ] border none floating enable
+for_window [ title="^pdfpc - presenter" ] border none floating enable
+for_window [ title="^pdfpc - presenter" ] fullscreen enable
+
+# calculator
+bindsym XF86Calculator exec galculator
+for_window [class="kcalc"] floating enable
+for_window [class="galculator"] floating enable
+for_window [class="Galculator"] floating enable
+for_window [class="gnome-calculator"] floating enable
+for_window [class="gnome-calendar"] floating enable
+
+# name = File Operation Progress == float
+for_window [class="^Tk$"] floating enable
+for_window [title="ocv_*"] move to workspace number 3
+
+
+# enable transparency
+exec_always --no-startup-id "killall picom; picom"
+

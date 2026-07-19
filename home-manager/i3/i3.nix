@@ -1,61 +1,14 @@
-# i3.nix
-#
-# Home-manager module converted from the uploaded i3 `config` file.
-#
-# Import this from your home.nix, e.g.:
-#   imports = [ ./i3.nix ];
-#
-# APPROACH: same as the neovim conversion -- rather than translating every
-# bindsym/mode/bar block into home-manager's structured
-# `xsession.windowManager.i3.config.*` nix attrset (which *is* possible, but
-# for ~150 bindings + 4 modes + a bar block it's a huge, error-prone rewrite
-# for no real benefit), this drops your file almost verbatim into
-# `extraConfig` as raw i3 syntax, with `config = null;` so home-manager
-# doesn't also try to generate its own config on top. You get the exact same
-# runtime behavior, just now written declaratively.
-#
-# WHAT WAS DROPPED / CHANGED (read before using):
-#
-# 1. EPIGEN_ADD_BLOCK_* templating resolved the same way as the vimrc: I
-#    kept whichever branch was marked ACTIVE / already uncommented
-#    (JELLYBEANS color scheme, no fake-outputs) and dropped the alternates
-#    (LIGHT color scheme, the three FAKEOUTPUTS_* xrandr layouts). If you
-#    actually use one of the fake-outputs variants on some machine, say so
-#    and I'll wire it up as a NixOS-conditional or separate host module.
-#
-# 2. This references a large pile of scripts that weren't part of the
-#    upload: ~/.i3/my_autoname_workspaces.py, ~/.i3/conky/conky_start,
-#    ~/.i3/border_control, ~/.i3/detacher.sh, ~/.i3/set_fake_outputs.sh,
-#    ~/.i3/setSink.sh, ~/.i3/setKeyboard.sh, ~/.i3/swapLayout.sh,
-#    ~/.i3/externOnly.sh, ~/.i3/shutdown_menu, ~/.i3/banishMouse.sh,
-#    ~/.i3/setWallpaper.sh, ~/.i3/i3blocks.conf, ~/.screenlayout/dual_uw.sh,
-#    ~/git/linux-setup/submodules/i3-layout-manager/layout_manager.sh,
-#    ~/git/xrandr-invert-colors/xrandr-invert-colors.bin, ~/.i3/startTickeys.sh.
-#    Home-manager can't create these for you since their contents are
-#    unknown; either keep managing them separately (e.g. `home.file` pointing
-#    at files you already have) or send them over and I'll fold them in too.
-#
-# 3. `gaps`, `smart_gaps`, `smart_borders` require i3-gaps features. Recent
-#    i3 (>=4.22) merged gaps support upstream, so plain `pkgs.i3` may now be
-#    enough -- but `pkgs.i3-gaps` is used below to match your original setup
-#    more safely. Swap for `pkgs.i3` if you're on a new enough i3.
-#
-# 4. Packages your exec/exec_always lines assume are installed
-#    (xfce4-notifyd, nm-applet, blueman-applet, pulseaudio, pa-applet,
-#    cbatticon, unclutter, keynav, compton, i3blocks, rofi, dmenu/
-#    networkmanager_dmenu, xbacklight, xdotool, shutter, galculator) are
-#    NOT installed by this file -- add them to home.packages or your NixOS
-#    system packages as needed. Say the word if you'd like me to add a
-#    home.packages list for these.
-#
-# 5. The long personal keyboard-review comment block at the end of your
-#    file (about the Ultimate Hacking Keyboard) was left out since it's a
-#    journal entry, not config -- happy to keep it as a comment if you want
-#    it preserved verbatim.
-
-{ pkgs, lib, ... }:
-
+{ hostName, config, pkgs, lib, ... }:
+let
+  here = toString ./.;
+in
 {
+  home.packages = [ pkgs.font-awesome ];
+  home.file.".i3" = {
+    source = ./doti3;
+    recursive = true;
+  };
+
   xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3;
@@ -87,7 +40,7 @@
       set $mod3 Mod5
       set $mod4 Mod4
 
-      font pango:Terminus Bold, FontAwesome 9
+      font pango:Terminus, Font Awesome 9
 
       # Use Mouse+$mod to drag floating windows to their wanted position
       floating_modifier $mod
@@ -251,25 +204,13 @@
       for_window [class="conky"] no_focus
       for_window [class="conky"] move to output primary
 
-      for_window [class="MATLAB R2015a" title="^Fig"] no_focus
-      for_window [class="MATLAB R2015a" title="^Fig"] move to workspace number 3
-      for_window [class="gazebo"] move to workspace number 3
-      for_window [class="rviz"] move to workspace number 8
 
       for_window [class="firefox"] move to workspace number 5
-
-      for_window [class="session"] move to workspace number 7
-      for_window [window_role="teams"] move to workspace number 7
-
-      for_window [ title="^pdfpc - presentation" ] move to number 8
-      for_window [ title="^pdfpc - presentation" ] border none floating enable
-      for_window [ title="^pdfpc - presenter" ] border none floating enable
-      for_window [ title="^pdfpc - presenter" ] fullscreen enable
 
       # i3bar
       bar {
           status_command i3blocks -c ~/.i3/i3blocks.conf
-          font pango: Terminus (TTF) , FontAwesome Bold 13
+          font pango: Terminus , Font Awesome Bold 13
           height 25
 
           bindsym button4 nop
@@ -297,14 +238,6 @@
       smart_gaps on
       smart_borders on
 
-      # calculator
-      bindsym XF86Calculator exec galculator
-      for_window [class="kcalc"] floating enable
-      for_window [class="galculator"] floating enable
-      for_window [class="Galculator"] floating enable
-      for_window [class="gnome-calculator"] floating enable
-      for_window [class="gnome-calendar"] floating enable
-
       # rofi launcher
       bindsym $mod+d exec "rofi -combi-modi drun,run -show combi -modi combi -location 2 -terminal urxvt -font 'Terminus Bold 15'"
 
@@ -327,15 +260,8 @@
       # swapping keyboard layouts
       exec_always --no-startup-id ~/.i3/setKeyboard.sh
 
-      # name = File Operation Progress == float
-      for_window [class="^Tk$"] floating enable
-      for_window [title="ocv_*"] move to workspace number 3
-
       # lock session
       bindsym $mod+Shift+x exec ~/.i3/shutdown_menu -p rofi
-
-      # enable transparency
-      exec_always --no-startup-id "killall compton; compton"
 
       # invert screen color
       bindsym $mod+Ctrl+i exec ~/git/xrandr-invert-colors/xrandr-invert-colors.bin
@@ -402,6 +328,14 @@
       bindsym $mod4+r exec ~/.i3/setKeyboard.sh
       # bindsym $mod+t exec "sudo ~/.i3/startTickeys.sh"
       # bindsym $mod+g exec "sudo ~/.i3/startTickeys.sh stop"
+      #
+
+      include ~/.i3/my.config
     '';
   };
+
+  # make the additionall zshrc editable from home
+  home.file.".i3/my.config".source = 
+    config.lib.file.mkOutOfStoreSymlink
+    "${here}/doti3/${hostName}-doti3config";
 }

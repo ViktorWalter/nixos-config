@@ -66,6 +66,10 @@
   };
 
 
+  fonts.fontconfig.allowBitmaps = true;
+  fonts.fontconfig.useEmbeddedBitmaps = true;
+  fonts.fontconfig.enable = true;
+  fonts.fontDir.enable = true;
 
   
 
@@ -104,15 +108,15 @@
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
-   environment.systemPackages = with pkgs; [
-     # neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-     wget
-     git
-     hyfetch
-     # tmux
-     # rxvt-unicode
-     ranger
-   ];
+  #
+  environment.systemPackages = with pkgs; [
+    wget
+    git
+    hyfetch
+    ranger
+    xorg.xlsfonts
+  ]
+  ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";
 

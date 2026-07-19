@@ -1,0 +1,36 @@
+#!/bin/bash
+pidof -x $0
+for pid in $(pidof -x "$0"); do
+  if [ $pid != $$ ]; then
+    kill -9 $pid
+  fi
+done
+killall conky
+killall perl
+sleep 2;
+cd ~/.i3/conky/
+
+echo "Prepare the focus protection and conky persistor;"
+../i3subscribe window | while read -r event; do
+  conkyWin=`xdotool search --class "conky"`;
+  if [ "$(echo $conkyWin | wc -l)" -gt "1" ]; then
+    # i3-nagbar -m "conky duped"
+    date >> /home/viktor/.i3/conky/errors.txt
+    echo "conky duped" >> /home/viktor/.i3/conky/errors.txt
+    echo "conky duped"
+    killall conky
+    conky -c dotconkyrc &>/dev/null &
+    sleep 2;
+  fi
+  if [ -z "$conkyWin" ]; then
+    echo "no conky found, starting new instance"
+    killall conky
+    conky -c dotconkyrc &>/dev/null &
+    sleep 2;
+  fi;
+  echo $conkyWin | grep `xdotool getwindowfocus`;
+  if [ "$?" -eq "0" ]; then i3-msg focus mode_toggle; fi;
+    echo "again"
+    # echo "again" >> /home/viktor/.i3/conky/errors.txt
+done
+exit

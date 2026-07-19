@@ -1,0 +1,12 @@
+@import url("resource:///org/gnome/NumixCold/gtk/dist/gtk.css");
+
+GtkScrolledWindow .undershoot.top,
+GtkScrolledWindow .undershoot.top:backdrop,
+GtkScrolledWindow .undershoot.bottom,
+GtkScrolledWindow .undershoot.bottom:backdrop,
+GtkScrolledWindow .undershoot.left,
+GtkScrolledWindow .undershoot.left:backdrop,
+GtkScrolledWindow .undershoot.right,
+GtkScrolledWindow .undershoot.right:backdrop {
+    background-color: transparent;
+}

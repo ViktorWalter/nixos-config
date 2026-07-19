@@ -1,13 +1,16 @@
 { pkgs, ... }:
 
 {
-  home.packages = [ pkgs.nerd-fonts.terminess-ttf ];
+  home.packages = [ pkgs.terminus_font ];
   fonts.fontconfig.enable = true;
 
   programs.urxvt = {
     enable = true;
 
-    fonts = [ "xft:Terminess Nerd Font:size=10" ];
+    fonts = [
+      "xft:Terminus:size=10"
+    ];
+    
 
     iso14755 = false;
 
