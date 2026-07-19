@@ -115,8 +115,9 @@
     hyfetch
     ranger
     xorg.xlsfonts
-  ]
-  ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
+    hyfetch
+  ];
+  # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";
 

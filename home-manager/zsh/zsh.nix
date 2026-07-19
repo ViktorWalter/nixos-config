@@ -19,6 +19,7 @@ in
       vimdiff = "nvim -d";
       ".." = "cd ..";
       ":q" = "exit";
+      neofetch = "hyfetch";
       update = "sudo nixos-rebuild switch";
     };
 
