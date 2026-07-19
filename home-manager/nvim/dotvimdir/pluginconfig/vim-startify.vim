@@ -1,6 +1,5 @@
 " vim-startify config
 
-" CUSTOM Startify settings... TODO: finetune!
 autocmd User Startified setlocal cursorline
 
 let g:startify_enable_special         = 1
@@ -21,21 +20,13 @@ let g:startify_skiplist = [
 
 " bookmarks in startify
 let g:startify_bookmarks = [
-      \ { 'b': '~/.bashrc' },
+      \ { 'b': '~/.my.zshrc' },
       \ { 'v': '~/.vimrc' },
       \ '~/someotherfile',
       \ ]
 
-" the bottom part of the startify
-" the bottom part of the startify
-  " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX {
 let g:startify_custom_footer =
-      \ ['', "   Pes štěká, kočka mňouká.", '']
-  " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX }
-  " EPIGEN_ADD_BLOCK_VIKTOR_BIGBOX {
-" let g:startify_custom_footer =
-"       \ ['', "   Spider entraps.", '']
-  " EPIGEN_ADD_BLOCK_VIKTOR_BIGBOX }
+       \ ['', "   Spider entraps.", '']
 
 hi StartifyBracket ctermfg=240
 hi StartifyFile    ctermfg=147
@@ -49,14 +40,7 @@ hi StartifySpecial ctermfg=240
 " map <leader>s to newtab+startify
 map <leader>s :tabnew<cr>:Startify<CR>      " run startify 
 
-" load quotes for startify
-  " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX {
-source ~/.vim/../startify_quotes.txt
-  " EPIGEN_DEL_BLOCK_VIKTOR_BIGBOX }
-  " EPIGEN_ADD_BLOCK_VIKTOR_BIGBOX {
-  " " Mine is prettier
-" source ~/.i3/startify_quotes.txt
-  " EPIGEN_ADD_BLOCK_VIKTOR_BIGBOX }
+source ~/.vim/startify_quotes.txt
 
 let g:startify_session_before_save = [
     \ 'echo "Cleaning up before saving.."',

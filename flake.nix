@@ -34,6 +34,7 @@
       # both in NixOS modules and (via useGlobalPkgs) in home-manager.
       athameOverlay = final: prev: {
         athame-zsh = final.callPackage ./pkgs/athame-zsh.nix { inherit athame-flake; pkgs=pkgsOld; };
+      };
 
 
       mkHost = { hostName, system ? "x86_64-linux" }:
@@ -47,16 +48,14 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit athame-flake; }; 
+              home-manager.extraSpecialArgs = { inherit hostName athame-flake; }; 
               home-manager.users.viktor = import ./home.nix;
             }
           ];
         };
-
-      };
       in {
         nixosConfigurations = {
-          viktorPC = mkHost {hostname = "viktorPC"; };
+          viktorPC = mkHost {hostName = "viktorPC"; };
       };
     };
 

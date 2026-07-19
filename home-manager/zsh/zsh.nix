@@ -1,10 +1,12 @@
-{ pkgs, lib, ... }:
+{ hostName, config, pkgs, lib, ... }:
 
+let
+  here = toString ./.;
+in
 {
   programs.zsh = {
     enable = true;
     package = pkgs.athame-zsh;
-    initContent = builtins.readFile ./zshrc;  # older home-manager: initExtra
 
     autosuggestion.enable = false;
     syntaxHighlighting.enable = true;
@@ -15,29 +17,22 @@
       ra = "ranger";
       vim = "runVim";
       vimdiff = "nvim -d";
-      .. = "cd ..";
-      :q = "exit";
+      ".." = "cd ..";
+      ":q" = "exit";
       update = "sudo nixos-rebuild switch";
     };
 
     oh-my-zsh = { # "ohMyZsh" without Home Manager
       enable = true;
-      plugins = [ "git" "ros" ];
-      custom = "./zsh/oh-my-zsh-custom"; # plain string path, not ./mytheme
+      plugins = [ "git" "ros" "sudo" ];
+      custom = "${here}/oh-my-zsh-custom"; # plain string path, not ./mytheme
       theme = "vrisk";
     };
 
 
     initContent = ''
       export TERMSESSION="yes"
-      # zmodload zsh/zprof
-      # set -x
-      # export EDITOR="/usr/bin/vim --servername spider --cmd 'let g:user_mode=1'"
-      if [ -x "$(command -v nvim)" ]; then
-        export EDITOR="/usr/bin/nvim --cmd 'let g:user_mode=1'"
-      else
-        export EDITOR="/usr/bin/vim --servername dog --cmd 'let g:user_mode=1'"
-      fi
+      export EDITOR="$(which nvim) --cmd 'let g:user_mode=1'"
       export TMUX_BIN=`which tmux`
   
       unset zle_bracketed_paste
@@ -98,7 +93,7 @@
   
       runVim() {
       
-        VIM_CMD=$(echo "$EDITOR ${@}")
+        VIM_CMD=$(echo "$EDITOR ''${@}")
       
         # if the tmux session does not exist, create new and run vim in it
         if [ -z $TMUX ]; then
@@ -152,7 +147,7 @@
   
   
       # path to the git root
-      export GIT_PATH=${HOME}/git
+      export GIT_PATH=''${HOME}/git
   
       export LESS='-R'
       export LESSOPEN='|~/.lessfilter %s'
@@ -173,14 +168,14 @@
       fi
   
   
-      source ${HOME}/.my.zshrc # Important ! These are per-computer configs I can change from the home directory
+      source ''${HOME}/.my.zshrc # Important ! These are per-computer configs I can change from the home directory
     '';
   };
 
   # make the additionall zshrc editable from home
-  home.file.".my.zshrc" = {
-    source ./home-manager/${hostName}-dotzshrc;
-  };
+  home.file.".my.zshrc".source = 
+    config.lib.file.mkOutOfStoreSymlink
+    "/etc/nixos/home-manager/zsh/${hostName}-dotzshrc";
 
 
   home.file.".athamerc".text = ''
