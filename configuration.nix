@@ -33,10 +33,13 @@
   };
 
   services.getty.autologinUser = "viktor";
-
-  systemd.settings.Manager = {
-    DefaultTimeoutStopSec = "30s";
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "viktor";
   };
+
+  systemd.settings.Manager.DefaultTimeoutStopSec = 30;
+  #systemd.user.settings.Manager.DefaultTimeoutStopSec = 30;
 
   # Set your time zone.
   time.timeZone = "Europe/Prague";

@@ -40,7 +40,7 @@ in
       set $mod3 Mod5
       set $mod4 Mod4
 
-      font pango:Terminus, Font Awesome 9
+      font pango:Terminus, Font Awesome 7 Free 9
 
       # Use Mouse+$mod to drag floating windows to their wanted position
       floating_modifier $mod
@@ -210,7 +210,7 @@ in
       # i3bar
       bar {
           status_command i3blocks -c ~/.i3/i3blocks.conf
-          font pango: Terminus , Font Awesome Bold 13
+          font pango: Terminus , Font Awesome 7 Free Bold 13
           height 25
 
           bindsym button4 nop

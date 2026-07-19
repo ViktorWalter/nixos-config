@@ -35,7 +35,7 @@ BORDER_COLOR="#222222"
 
 # Options not related to colors
 ROFI_TEXT="Menu:"
-ROFI_OPTIONS=( -width 11 -location 7 -hide-scrollbar -bw 2 -font "Terminus (TTF) Bold 15")
+ROFI_OPTIONS=( -width 11 -location 7 -hide-scrollbar -bw 2 -font "Terminus Bold 15")
 
 # Zenity options
 ZENITY_TITLE="Menu"

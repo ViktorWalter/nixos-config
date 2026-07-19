@@ -5,7 +5,7 @@
     enable = true;
 
     # Rendering backend - "glx" is GPU-accelerated and generally the best choice
-    backend = "glx";
+    backend = "xrender";
     vSync = true;
 
     # Shadows
@@ -21,31 +21,31 @@
     ];
 
     # Fading
-    fade = true;
+    fade = false;
     fadeDelta = 4;
     fadeSteps = [ 0.03 0.03 ];
     fadeExclude = [ ];
 
     # Opacity
-    activeOpacity = 1.0;
-    inactiveOpacity = 0.9;
-    menuOpacity = 1.0;
-    opacityRules = [
-      "90:class_g = 'kitty' && focused"
-      "80:class_g = 'kitty' && !focused"
-      "100:class_g = 'mpv'"
-      "100:fullscreen"
-    ];
+    #activeOpacity = 1.0;
+    #inactiveOpacity = 0.9;
+    #menuOpacity = 1.0;
+    #opacityRules = [
+    #  "90:class_g = 'kitty' && focused"
+    #  "80:class_g = 'kitty' && !focused"
+    #  "100:class_g = 'mpv'"
+    #  "100:fullscreen"
+    #];
 
     # Blur (backend must support it - glx or xrender)
     settings = {
-      blur = {
-        method = "dual_kawase";
-        strength = 1;
-        background = false;
-        background-frame = false;
-        background-fixed = false;
-      };
+      #blur = { # for actuall PC
+      #  method = "dual_kawase";
+      #  strength = 1;
+      #  background = false;
+      #  background-frame = false;
+      #  background-fixed = false;
+      #};
 
       corner-radius = 0;
       rounded-corners-exclude = [
