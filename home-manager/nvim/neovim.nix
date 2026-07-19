@@ -1,0 +1,724 @@
+# neovim.nix
+#
+# Home-manager module for neovim, using vim-plug (not nix) to manage plugins,
+# per your request. Plugin resolution/installation is entirely vim-plug's
+# job at runtime -- this deliberately steps outside Nix's reproducibility
+# guarantees for the plugin set, as you noted.
+#
+# LAYOUT expected next to this file:
+#   ./neovim.nix
+#   ./dotvimdir/            <- the .vim directory you uploaded, unzipped here
+#       autoload/plug.vim
+#       pluginconfig/*.vim
+#       UltiSnips/*.snippets
+#       colors/, syntax/, spell/, after/, plugin/, doc/
+#
+# WHAT THIS DOES
+# - Ships your entire ~/.vim directory (vim-plug's autoload/plug.vim,
+#   pluginconfig/*.vim, UltiSnips snippets, colors, syntax, spell files,
+#   plugin/notmuch.vim, after/ftplugin) via home.file, with `recursive =
+#   true` so home-manager symlinks individual files rather than turning
+#   ~/.vim itself into one big read-only symlink. That matters because it
+#   leaves ~/.vim/plugged as a plain, writable directory -- vim-plug needs
+#   to `git clone` into it, and it can't do that if ~/.vim is a symlink into
+#   the read-only Nix store.
+# - Adds ~/.vim to Neovim's runtimepath (nvim doesn't look there by
+#   default -- only vim does), so autoload/plug.vim, colors/*, syntax/*,
+#   spell/*, after/ftplugin/*, and UltiSnips/* are all found the same way
+#   they were before.
+# - Puts your full vimrc -- restored to its complete form, including the
+#   athame/g:user_mode branches -- into extraConfig, essentially unchanged
+#   from your original file. vim-plug's `Plug` calls are left as raw
+#   vimscript; nix does not touch the plugin list at all.
+#
+# FIRST RUN
+#   home-manager switch
+#   nvim   # then run :PlugInstall
+#
+# ATHAME NOTES
+# g:user_mode defaults to "0" (athame) unless something already set
+# g:user_mode=1 before this file loads (e.g. `nvim --cmd "let g:user_mode=1"`)
+# or the buffer is a diff. That external "set it to 1 for interactive use"
+# step isn't part of this file -- it lived in your shell config (an alias?)
+# which wasn't part of either upload. If plain `nvim` is now dropping you
+# into athame/minimal mode when you expect the full "normal" config, that's
+# why; happy to add a shell alias for this in home-manager (e.g. via
+# programs.zsh.shellAliases) if you tell me what it should look like.
+#
+# EPIGEN_ADD/DEL_BLOCK_* markers: resolved exactly as before -- kept
+# whichever branch was marked ACTIVE (lightline over airline, VIKTOR_BIGBOX
+# deoplete block, VIKTOR_BIGBOX/THINKPAD startify sourcing, default/
+# papercolor colorscheme) and left the alternates as inert comments, just
+# like they were in your source file.
+
+{ pkgs, lib, ... }:
+
+{
+  # git is required for vim-plug's :PlugInstall/:PlugUpdate to work.
+  home.packages = [ pkgs.git ];
+
+  home.file.".vim" = {
+    source = ./dotvimdir;
+    recursive = true;
+  };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    defaultEditor = true;
+    withPython3 = true;
+    extraPython3Packages = (ps: with ps; [ pynvim ]);
+    # No nix-managed plugins -- vim-plug (invoked from extraConfig below)
+    # owns the entire plugin set, as requested.
+    plugins = [ ];
+
+    extraConfig = ''
+      " Make sure Neovim can find ~/.vim/autoload/plug.vim, ~/.vim/colors,
+      " ~/.vim/syntax, ~/.vim/spell, ~/.vim/UltiSnips, etc. -- nvim does not
+      " include ~/.vim on the runtimepath by default the way vim does.
+      set runtimepath^=~/.vim
+      set runtimepath+=~/.vim/after
+
+      set nocompatible              " be iMproved, required by Vundle
+      set t_Co=256                  " 256 colors
+      set encoding=utf-8
+      set lazyredraw
+
+      " detects how was vim started... 1=manually, 0=other (athame)
+      let g:user_mode = get(g:, 'user_mode', "0")
+
+      " if in diff, set user mode to 1
+      if &diff
+        let g:user_mode = 1
+      endif
+
+      " set athame filetype
+      if g:user_mode == "0"
+        set filetype=athame
+      endif
+
+      call plug#begin("~/.vim/plugged")
+
+      " which plugins should not be loaded outside of normal session (not in athame)
+      if g:user_mode == "1"
+
+        " A colorful, dark color scheme
+        Plug 'nanotech/jellybeans.vim'
+
+        " fugitive.vim: a Git wrapper so awesome, it should be illegal
+        Plug 'tpope/vim-fugitive'
+
+        " showing git changes in the file
+        Plug 'airblade/vim-gitgutter'
+
+        " resolving conflicts in git the better way
+        Plug 'christoomey/vim-conflicted'
+
+        Plug 'frazrepo/vim-rainbow'
+
+        " Lean & mean status/tabline for vim that's light as air.
+        " Plug 'bling/vim-airline'
+        " Plug 'vim-airline/vim-airline-themes'
+        Plug 'itchyny/lightline.vim'
+
+        "For saving files with sudo from normal vim
+        Plug 'lambdalisue/suda.vim'
+
+        "An essential component for my isolation mode - when the brain refuses to cooperate
+        Plug 'junegunn/goyo.vim'
+
+        "A plugin to work with Arduino sketches
+        Plug 'stevearc/vim-arduino'
+
+        " For saving files with sudo from normal vim
+        Plug 'lambdalisue/suda.vim'
+        cmap w!! w suda://%
+
+        " integration with tmux (allows running bash commands in tmux splits)
+        Plug 'benmills/vimux'
+
+        " file manager (leader+n)
+        Plug 'scrooloose/nerdtree'
+
+        " home screen (necessary to have a barking dog)
+        Plug 'mhinz/vim-startify'
+
+        " visualizing marks
+        " show marks left to line numbers
+        Plug 'kshenoy/vim-signature'
+
+        " clever abbreviations and syntax conversion
+        " I want to learn this !!
+        Plug 'tpope/vim-abolish'
+
+        " automatic function argument reformatting
+        " mapped to leader+w
+        Plug 'foosoft/vim-argwrap'
+
+        " python formatting
+        Plug 'hynek/vim-python-pep8-indent'
+
+        " Clever motions helper
+        " highlights letters while using f, t motions
+        Plug 'unblevable/quick-scope'
+
+        " Shows tags in the file
+        " currently mapped to F8
+        Plug 'majutsushi/tagbar', { 'commit': 'a0f51bd' }
+
+        if has('nvim')
+          Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+          Plug 'kiddos/deoplete-cpp'
+          Plug 'deoplete-plugins/deoplete-tag'
+
+          " Plug 'dense-analysis/ale'
+          Plug 'neomake/neomake'
+        else
+          Plug 'Shougo/deoplete.nvim'
+          Plug 'roxma/nvim-yarp'
+          Plug 'roxma/vim-hug-neovim-rpc'
+        endif
+        let g:deoplete#enable_at_startup = 1
+
+        " youcompleteme
+        " automatic code completion for C++ and more
+        " Plug 'ycm-core/YouCompleteMe', { 'commit': '380a7f6', 'do': './install.py --clangd-completer' }
+        " Plug 'rdnetto/YCM-Generator', { 'commit': '9cb722a' }
+        "" enable airline YCM status
+        "let g:airline#extensions#ycm#enabled = 1
+
+        " make vim and ROS friends
+        Plug 'klaxalk/vim-ros'
+
+        " airline extension for tmux
+        " it colors the tmuxes airline in same colors as in vim
+        " Plug 'edkolev/tmuxline.vim'
+
+        " Latex stuff
+        Plug 'lervag/vimtex'
+
+        " VimWiki
+        " Essential part in taking notes in vim
+        Plug 'vimwiki/vimwiki'
+
+        " allows showing logs with color codes in vim
+        " :ansi
+        Plug 'powerman/vim-plugin-AnsiEsc'
+
+        " ???
+        Plug 'vim-scripts/MatlabFilesEdition'
+
+        " Managing navigation between vim and tmux
+        " allows to use the same keys (CTRL+hjkl) for smothly navigating between tmux
+        " and vim panels... its like magic :-)
+        Plug 'christoomey/vim-tmux-navigator'
+
+        " should make ultisnips work together with youcompletme
+        Plug 'ervandew/supertab'
+
+        " easier manipulation with quickfix window
+        " [q and ]q to move through the quickfix list
+        " [l and ]l to move through the quickfix list
+        " ... it has many more useful commands
+        Plug 'tpope/vim-unimpaired'
+
+        " managing sessions
+        " Plug 'tpope/vim-obsession'
+
+        " fuzzy finder
+        Plug 'ctrlpvim/ctrlp.vim'
+
+        " vim talking to tmux.. seems better then vimux, so far in testing
+        Plug 'christoomey/vim-tmux-runner'
+
+        " autoformatting c++ code
+        Plug 'https://github.com/rhysd/vim-clang-format'
+
+        " aligning stuff
+        Plug 'junegunn/vim-easy-align'
+
+        " AsyncRun
+        Plug 'skywind3000/asyncrun.vim'
+
+        " commenting stuff made easy
+        " try gc<motion>
+        Plug 'tpope/vim-commentary'
+
+        " better highlighting for c++11/14/17
+        " Plug 'jeaye/color_coded'
+        Plug 'octol/vim-cpp-enhanced-highlight'
+        " Plug 'bfrg/vim-cpp-modern'
+        " Plug 'bbchung/clighter8'
+        " Plug 'bbchung/Clamp'
+        " let g:clamp_libclang_file = '/usr/lib/x86_64-linux-gnu/libclang-3.9.so.1'
+        " Plug 'justinmk/vim-syntax-extra'
+
+        " Thesaurus synonyms integration
+        " <leader>cs
+        Plug 'ron89/thesaurus_query.vim'
+
+        "   " Grammar checking
+        "   Plug 'rhysd/vim-grammarous'
+
+        "   " Syntax highlighting for GLSL language
+        "   Plug 'tikhomirov/vim-glsl'
+
+        "   " Papis vim integration
+        "   Plug 'junegunn/fzf'
+        "   Plug 'papis/papis-vim'
+        "   nnoremap <localleader>pp :Papis<cr>
+        "   nnoremap <localleader>pv :PapisView<cr>
+
+        " " Syntax-error highlighting
+        " Plug 'vim-syntastic/syntastic'
+
+        if has("nvim")
+          Plug 'mklabs/split-term.vim'
+          " Plug 'arakashic/chromatica.nvim'
+          " let g:chromatica#libclang_path='/usr/lib/llvm-6.0/lib/libclang.so'
+          " let g:chromatica#enable_at_startup=1
+          " let g:chromatica#dotclangfile_search_path='''
+        endif
+
+      endif
+
+      " Repeat.vim remaps . in a way that plugins can tap into it.
+      Plug 'tpope/vim-repeat'
+
+      " Multiple cursors
+      " in visual pres ctrl+n to select next occurance
+      " ctrl+p to go back and ctrl+x to skip
+      Plug 'terryma/vim-multiple-cursors'
+
+      " sharing registers between multiple instances of vim
+      Plug 'ardagnir/united-front'
+
+      " snippet completion
+      " magic!
+      Plug 'SirVer/ultisnips'
+      Plug 'vim-scripts/DoxygenToolkit.vim'
+
+      " powerful targeting of text parts
+      " makes targetting more naturally useful..
+      Plug 'wellle/targets.vim'
+
+      " allows to replace text without pasting in to a register by gr
+      " howto: yank od delete something, then past it in by e.g. griw (go replace in
+      " word) to replace without removing it from register
+      Plug 'vim-scripts/ReplaceWithRegister'
+
+      " modifying surroundings by "s" target
+      " e.g. cs"' changes surrounding quotes
+      Plug 'tpope/vim-surround'
+
+      " exchangin of two parts of a file...
+      " cx{motion} and later cx{motion} swaps the two places
+      Plug 'tommcdo/vim-exchange'
+
+      call plug#end()
+
+      set clipboard=unnamedplus     " shared clipboard with the system
+
+      " some color stuff
+      syntax enable
+
+      " general vim settings
+      " more natural splits
+      set splitbelow
+      set splitright
+
+      " set line numbering
+      set number
+
+      " indention
+      set expandtab                   " tab inserts spaces
+      set shiftwidth=2
+      set softtabstop=2
+      set autoindent                  " copy the indention from the last line
+      set smartindent                 " sometimes indent extra indention
+      set tabstop=2                   " width of the tab character
+      set scrolloff=10                " ads cursor margin for the edge of the page
+      set relativenumber              " turn on relative numbering of lines
+
+      set showmatch                   " brief jump to matching parent
+      set title
+
+      " searching and patterns
+      set ignorecase
+      set smartcase
+      set hlsearch
+      set incsearch
+
+      " syntax highlighting for only first ** characters of each line
+      set synmaxcol=400
+
+      " map the leader key
+      nnoremap , <NOP>
+      let mapleader = ","
+      nmap <space> ,
+      let maplocalleader = "`"
+
+      " wildmenu for file name suggestion while opening
+      set wildmenu
+      set wildmode=full
+
+      " Switch between relative and absolute line numbers with leader-N
+      function! NumberToggle()
+        if(&relativenumber == 1)
+          set nornu
+        else
+          set relativenumber
+        endif
+      endfunc
+      nnoremap <leader>r :call NumberToggle()<cr>
+
+      " switch :paste mode
+      " probably redundant since our clipboards all shared all over
+      function! TogglePaste()
+        if(&paste == 0)
+          set paste
+        else
+          set nopaste
+        endif
+      endfunc
+      nnoremap <leader>p :call TogglePaste()<cr>
+
+      " default values for cursorlin and cursorcolumn
+      set nocursorline
+      set nocursorcolumn
+
+      " enable cursorlines
+      function! EnableCursorLines()
+        set cursorline
+        set cursorcolumn
+      endfunc
+
+      " toggle cursorlines
+      function! ToggleCursorLines()
+        if(&cursorline == 0)
+          set cursorline
+          set cursorcolumn
+        else
+          set nocursorline
+          set nocursorcolumn
+        endif
+      endfunc
+      nnoremap <leader>c :call ToggleCursorLines()<cr>
+
+      " enable cursor lines for python files
+      au FileType python call EnableCursorLines()
+
+      " should fix colors in tmux
+      if !has("nvim")
+        set term=screen-256color
+
+        cnoreabbrev vt vertical terminal
+        cnoreabbrev st terminal
+
+      else
+
+        cnoreabbrev vt VTerm
+        cnoreabbrev st Term
+
+      endif
+
+      " Highlight all instances of word under cursor, when idle.
+      " Useful when studying strange source code.
+      " Type z/ to toggle highlighting on/off.
+      function! AutoHighlightToggle()
+        let @/ = '''
+        if exists('#auto_highlight')
+          au! auto_highlight
+          augroup! auto_highlight
+          setl updatetime=4000
+          echo 'Highlight current word: off'
+          return 0
+        else
+          augroup auto_highlight
+            au!
+            au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+          augroup end
+          setl updatetime=500
+          echo 'Highlight current word: ON'
+          return 1
+        endif
+      endfunction
+      nnoremap <leader>a :call AutoHighlightToggle()<cr>
+
+      au BufNewFile,BufRead *.cl setlocal ft=c
+
+      " remap split navigations to ctrl + hjkl
+      nnoremap <C-J> <C-W><C-J>
+      nnoremap <C-K> <C-W><C-K>
+      nnoremap <C-L> <C-W><C-L>
+      nnoremap <C-H> <C-W><C-H>
+
+      " remap tab navigations to shift + JK
+      " nnoremap <S-J> :tabn<cr>
+      nnoremap <S-K> :tabp<cr>
+
+      " allow the . to execute macro @a once for each line of a visual selection
+      vnoremap . :normal @a<CR>
+
+      " format whole document and return back
+      nmap <leader>g :normal mggg=G'g<cr>:delmarks g<cr>zt:%s/\s\+$//g<cr>
+
+      " safe deleting things using <leader>d
+      nmap <leader>d "_d
+
+      " line breaking
+      set wrap
+      set linebreak
+      set nolist  " list disables linebreak
+      set wrapmargin=0
+      set textwidth=0
+
+      " just show the autocomplete menu
+      set completeopt=longest,menuone
+
+      " better escape: when naviating through suggestion menu, j and k will behave
+      " normally, otherwise they behave like ESC
+      imap <expr> jk (pumvisible()?(empty(v:completed_item)?("<Esc>l"):("\<C-n>\<C-p>")):("\<Esc>l"))
+
+      " clever brackets
+      imap <leader>( ()<Esc>i
+      imap <leader>{ {}<Esc>i
+
+      " " clever jumping to first and last character of the line
+      nmap H ^
+      vmap H ^
+      nmap L $
+      vmap L $
+
+      " dont jump to the next occurance, just highligh it
+      nmap * *N
+
+      " searching for visually selected text
+      vnoremap // y/<C-R>"<CR>
+
+      " folding by marker for various file types
+      au FileType m,matlab set foldmethod=marker
+      au FileType m,matlab set foldmarker=%\ %{,%\ %}
+
+      au FileType xdefaults set foldmethod=marker
+      au FileType xdefaults set foldmarker=!\ {,!\ }
+
+      au BufNewFile,BufRead *.sk setf sketch
+      au FileType sk,sketch set foldmethod=marker
+      au FileType sk,sketch set foldmarker=%\ %{,%\ %}
+
+      au FileType bib,yml,yaml,sh,conf,python set foldmethod=marker
+      au FileType bib,yml,yaml,sh,conf,python set foldmarker=#\ #{,#\ #}
+
+      au FileType cpp set foldmethod=marker
+      au FileType cpp set foldmarker=//{,//}
+
+      au FileType roslaunch.xml set foldmethod=marker
+      au FileType roslaunch.xml set foldmarker=//{,//}
+
+      au FileType xml,world,xacro set foldmethod=marker
+      au FileType xml,world,xacro set foldmarker={-->,<!--}
+
+      " find and replace
+      map <Leader>fr :%s///g<left><left>
+      map <Leader>frl :s///g<left><left>
+      map <Leader>fa :%s//&/g<left><left>
+      map <Leader>fal :s//&/g<left><left>
+
+      map <Leader>m :wa\|make\|redraw!\|cc<CR>
+
+      " remap "gf" to "gf in new tab"
+      nnoremap gf <C-W>gf
+
+      " vimgrepping in all subfolders
+      map <Leader>lv :lv //g ./**/*<c-f>^f/a
+
+      " sending lines of code to matlab
+      au BufNewFile,BufRead *.m map <Leader>. :VtrSendLinesToRunner<cr>
+
+      " nnoremap <leader>so :so ~/.vimrc<cr>
+
+      " remap upper case saving and quitting to lower case
+      command! WQ wq
+      command! Wq wq
+      command! W w
+      command! Q q
+
+      " set listchars for planner scripts
+      au BufNewFile,BufRead *.pln set list
+      au BufNewFile,BufRead *.pln set listchars=tab:▸▸
+
+      au BufNewFile,BufRead *.shadron set filetype=cpp
+      au BufNewFile,BufRead *.tpp set filetype=cpp
+
+      " those will be ignored by and vimgrep
+      set wildignore+=*/Downloads/**,*/Desktop/**,*/build/**
+
+      " set path for filename suggestions
+      " ** means "in any subfolder"
+      set path+=~/git/**
+      set path+=~/.vim/UltiSnips/**
+
+      " set jk in insert mode as ESC
+      " if has("nvim")
+      "   tnoremap jk <C-\><C-n>
+      " endif
+
+      " plugin settings for "normal" vim (not athame)
+      if g:user_mode == "1"
+
+        " config for airline
+        source ~/.vim/pluginconfig/vim-airline.vim
+
+        " config for startify
+        " source ~/.vim/pluginconfig/vim-startify.vim
+        source ~/.vim/pluginconfig/vim-startify.vim
+
+        " config for nerdtree
+        source ~/.vim/pluginconfig/nerdtree.vim
+
+        " config for vim-argwrap
+        source ~/.vim/pluginconfig/vim-argwrap.vim
+
+        " config for quick-scope
+        source ~/.vim/pluginconfig/quick-scope.vim
+
+        " config for tagbar
+        source ~/.vim/pluginconfig/tagbar.vim
+
+        " config for GoldenView
+        source ~/.vim/pluginconfig/GoldenView.vim
+
+        " source ~/.vim/pluginconfig/deoplete.vim
+        " source ~/.vim/pluginconfig/neomake.vim
+        " " source ~/.vim/pluginconfig/ale.vim
+        " config for youcompleteme
+        source ~/.vim/pluginconfig/youcompleteme.vim
+
+        " config for vim-ros
+        source ~/.vim/pluginconfig/vim-ros.vim
+
+        " config for tmuxline
+        source ~/.vim/pluginconfig/tmuxline.vim
+
+        " config for vimtex
+        source ~/.vim/pluginconfig/vimtex.vim
+
+        " config for VimWiki
+        source ~/.vim/pluginconfig/vimwiki.vim
+
+        " config for ctrl+P
+        source ~/.vim/pluginconfig/ctrlp.vim
+
+        " config for vim-tmux-runner
+        source ~/.vim/pluginconfig/vim-tmux-runner.vim
+
+        " config for vim-clang-format
+        source ~/.vim/pluginconfig/vim-clang-format.vim
+
+        " config for vim-easy-align
+        source ~/.vim/pluginconfig/vim-easy-align.vim
+
+        " config for vim-conflicted
+        source ~/.vim/pluginconfig/vim-conflicted.vim
+
+        " config for vim-cpp-enhanced-highlight
+        source ~/.vim/pluginconfig/vim-cpp-enhanced-highlight.vim
+
+        " source ~/.vim/pluginconfig/vim-glsl.vim
+
+        " source ~/.vim/pluginconfig/syntastic.vim
+
+      endif
+
+      " %:p:h path
+      " %:t file name
+      autocmd BufWritePost *.sk AsyncRun bash -c '%:p:h/compile_sketch.sh %:t'
+
+      " config for vim-multiple-cursors
+      source ~/.vim/pluginconfig/vim-multiple-cursors.vim
+
+      " config for UltiSnips
+      source ~/.vim/pluginconfig/ultisnips.vim
+
+      " config for vim-commentary
+      source ~/.vim/pluginconfig/vim-commentary.vim
+
+      " additional settings only for athame
+      if g:user_mode == "0"
+
+        nnoremap <leader>u Ivim ~/.vim/UltiSnips/athame.snippets
+        nnoremap <leader>ww Ivim ~/git/notes/index.md
+
+        nnoremap OA $a<up>
+        nnoremap OB $a<down>
+        nnoremap OC li<right>
+        nnoremap OD i
+
+        " nnoremap j j$
+        " nnoremap k k$
+
+      endif
+
+      " additional settings for non-athame vim
+      if g:user_mode == "1"
+
+        let g:tex_flavor = 'latex'
+
+        " set vim and airline colorscheme
+
+        colorscheme default
+        let g:airline_theme='papercolor'
+
+        " colorscheme jellybeans
+        " let g:airline_theme='jellybeans'
+
+        " colorscheme raggi
+        " let g:airline_theme='papercolor'
+
+        " colorscheme grun
+        " " config for airline theme 'term_grun' (the term theme with one changed
+        " " color to improve visibility of selected TMUX pane)
+        " let g:airline_theme='term_grun'
+
+        " customize bookmarks in startify
+        let g:startify_bookmarks = [
+              \ { 'b': '~/.bashrc' },
+              \ { 'i': '~/.i3/config' },
+              \ { 'p': '~/.config/papis/config' },
+              \ { 'r': '~/.config/ranger/rc.conf' },
+              \ { 't': '~/.tmux.conf' },
+              \ { 'v': '~/.config/nvim/init.vim' },
+              \ { 'x': '~/.Xresources' },
+              \ { 'z': '~/.zshrc' },
+              \ ]
+
+        function! SetEpigenSyntax()
+          syn match	epigenOpeningMatch	/.\+EPIGEN_.\+(ACTIVE)\+.\+/ containedin=ALL contained
+          syn match	epigenActiveSubmatch	/ACTIVE/ containedin=ALL,epigenOpeningMatch contained
+          syn match	epigenAdd	/\<\zsEPIGEN_ADD_.\+\ze\>.*/ containedin=ALL,epigenOpeningMatch contained
+          syn match	epigenDel	/\<\zsEPIGEN_DEL_.\+\ze\>.*/ containedin=ALL,epigenOpeningMatch contained
+
+          hi def link epigenActiveSubmatch Error
+          hi def link epigenAdd Macro
+          hi def link epigenDel Constant
+        endfunction
+        autocmd BufNewFile,BufRead * call SetEpigenSyntax()
+
+        " building markdown file
+        au FileType md,vimwiki,markdown nnoremap <leader>m :AsyncRun ~/.scripts/md2html.sh %:p<cr>
+
+      endif
+
+      nnoremap <leader>oi :delmark a<bar>:norm ma*:%s//_&/g<bar>:norm `a:delmark a<cr>
+      nnoremap <leader>oo :delmark a<bar>:norm ma*:%s//_&_/g<bar>:norm `a:delmark a<cr>
+      nnoremap <leader>op :delmark a<bar>:norm ma*:%s//&_/g<bar>:norm `a:delmark a<cr>
+
+      " My large subconfig
+      if !empty(glob("~/.my.vimrc"))
+        source ~/.my.vimrc
+      endif
+    '';
+  };
+}

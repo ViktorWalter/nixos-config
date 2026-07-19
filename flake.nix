@@ -34,22 +34,29 @@
       # both in NixOS modules and (via useGlobalPkgs) in home-manager.
       athameOverlay = final: prev: {
         athame-zsh = final.callPackage ./pkgs/athame-zsh.nix { inherit athame-flake; pkgs=pkgsOld; };
+
+
+      mkHost = { hostName, system ? "x86_64-linux" }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit hostName; inherit athame-flake; inherit pkgsOld; };
+          modules = [
+            { nixpkgs.overlays = [ athameOverlay ]; }
+            ./configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit athame-flake; }; 
+              home-manager.users.viktor = import ./home.nix;
+            }
+          ];
+        };
+
       };
       in {
-        nixosConfigurations.viktorPC = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit athame-flake; inherit pkgsOld; };
-          modules = [
-          { nixpkgs.overlays = [ athameOverlay ]; }
-          ./configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit athame-flake; }; 
-            home-manager.users.viktor = import ./home.nix;
-          }
-        ];
+        nixosConfigurations = {
+          viktorPC = mkHost {hostname = "viktorPC"; };
       };
     };
 

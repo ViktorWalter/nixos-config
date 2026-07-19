@@ -105,6 +105,7 @@
      tmux
      rxvt-unicode
      ranger
+     python3
    ];
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";
