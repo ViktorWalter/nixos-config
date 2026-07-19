@@ -1,58 +1,7 @@
-# neovim.nix
-#
-# Home-manager module for neovim, using vim-plug (not nix) to manage plugins,
-# per your request. Plugin resolution/installation is entirely vim-plug's
-# job at runtime -- this deliberately steps outside Nix's reproducibility
-# guarantees for the plugin set, as you noted.
-#
-# LAYOUT expected next to this file:
-#   ./neovim.nix
-#   ./dotvimdir/            <- the .vim directory you uploaded, unzipped here
-#       autoload/plug.vim
-#       pluginconfig/*.vim
-#       UltiSnips/*.snippets
-#       colors/, syntax/, spell/, after/, plugin/, doc/
-#
-# WHAT THIS DOES
-# - Ships your entire ~/.vim directory (vim-plug's autoload/plug.vim,
-#   pluginconfig/*.vim, UltiSnips snippets, colors, syntax, spell files,
-#   plugin/notmuch.vim, after/ftplugin) via home.file, with `recursive =
-#   true` so home-manager symlinks individual files rather than turning
-#   ~/.vim itself into one big read-only symlink. That matters because it
-#   leaves ~/.vim/plugged as a plain, writable directory -- vim-plug needs
-#   to `git clone` into it, and it can't do that if ~/.vim is a symlink into
-#   the read-only Nix store.
-# - Adds ~/.vim to Neovim's runtimepath (nvim doesn't look there by
-#   default -- only vim does), so autoload/plug.vim, colors/*, syntax/*,
-#   spell/*, after/ftplugin/*, and UltiSnips/* are all found the same way
-#   they were before.
-# - Puts your full vimrc -- restored to its complete form, including the
-#   athame/g:user_mode branches -- into extraConfig, essentially unchanged
-#   from your original file. vim-plug's `Plug` calls are left as raw
-#   vimscript; nix does not touch the plugin list at all.
-#
-# FIRST RUN
-#   home-manager switch
-#   nvim   # then run :PlugInstall
-#
-# ATHAME NOTES
-# g:user_mode defaults to "0" (athame) unless something already set
-# g:user_mode=1 before this file loads (e.g. `nvim --cmd "let g:user_mode=1"`)
-# or the buffer is a diff. That external "set it to 1 for interactive use"
-# step isn't part of this file -- it lived in your shell config (an alias?)
-# which wasn't part of either upload. If plain `nvim` is now dropping you
-# into athame/minimal mode when you expect the full "normal" config, that's
-# why; happy to add a shell alias for this in home-manager (e.g. via
-# programs.zsh.shellAliases) if you tell me what it should look like.
-#
-# EPIGEN_ADD/DEL_BLOCK_* markers: resolved exactly as before -- kept
-# whichever branch was marked ACTIVE (lightline over airline, VIKTOR_BIGBOX
-# deoplete block, VIKTOR_BIGBOX/THINKPAD startify sourcing, default/
-# papercolor colorscheme) and left the alternates as inert comments, just
-# like they were in your source file.
-
-{ pkgs, lib, ... }:
-
+{ hostName, config, pkgs, lib, ... }:
+let
+  here = toString ./.;
+in
 {
   # git is required for vim-plug's :PlugInstall/:PlugUpdate to work.
   home.packages = [ pkgs.git ];
@@ -689,9 +638,9 @@
               \ { 'p': '~/.config/papis/config' },
               \ { 'r': '~/.config/ranger/rc.conf' },
               \ { 't': '~/.tmux.conf' },
-              \ { 'v': '~/.config/nvim/init.vim' },
+              \ { 'v': '~/.my.vim' },
               \ { 'x': '~/.Xresources' },
-              \ { 'z': '~/.zshrc' },
+              \ { 'z': '~/.my.zshrc' },
               \ ]
 
         function! SetEpigenSyntax()
@@ -721,4 +670,10 @@
       endif
     '';
   };
+
+  # make the additionall vimrc editable from home
+  home.file.".my.vimrc".source = 
+    config.lib.file.mkOutOfStoreSymlink
+    "${here}/${hostName}-dotvimrc";
+
 }

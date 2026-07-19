@@ -1,0 +1,9 @@
+#!/bin/bash
+cd ~/.i3/
+./i3subscribe window | while read -r event; do
+  # i3-msg 'border pixel 2'
+  # i3-msg '[class="^.*"] border pixel 1'
+  i3-msg '[class="conky"] border none'
+  # i3-msg '[class="Yakuake"] border none'
+done
+exit

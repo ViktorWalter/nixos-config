@@ -175,7 +175,7 @@ in
   # make the additionall zshrc editable from home
   home.file.".my.zshrc".source = 
     config.lib.file.mkOutOfStoreSymlink
-    "/etc/nixos/home-manager/zsh/${hostName}-dotzshrc";
+    "${here}/${hostName}-dotzshrc";
 
 
   home.file.".athamerc".text = ''

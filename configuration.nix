@@ -23,8 +23,23 @@
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.viktor = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    packages = with pkgs; [
+      tree
+    ];
+  };
+
+  services.getty.autologinUser = "viktor";
+
+  systemd.settings.Manager = {
+    DefaultTimeoutStopSec = "30s";
+  };
+
   # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
+  time.timeZone = "Europe/Prague";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -72,14 +87,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.viktor = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      tree
-    ];
-  };
 
   home-manager.useUserPackages = true;
   home-manager.users.viktor = { pkgs, ... }: {
@@ -98,14 +105,13 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
    environment.systemPackages = with pkgs; [
-     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+     # neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
      wget
      git
      hyfetch
-     tmux
-     rxvt-unicode
+     # tmux
+     # rxvt-unicode
      ranger
-     python3
    ];
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";

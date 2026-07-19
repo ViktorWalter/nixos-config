@@ -400,8 +400,8 @@
 
       bindsym $mod3+b exec --no-startup-id ~/.i3/banishMouse.sh
       bindsym $mod4+r exec ~/.i3/setKeyboard.sh
-      bindsym $mod+t exec "sudo ~/.i3/startTickeys.sh"
-      bindsym $mod+g exec "sudo ~/.i3/startTickeys.sh stop"
+      # bindsym $mod+t exec "sudo ~/.i3/startTickeys.sh"
+      # bindsym $mod+g exec "sudo ~/.i3/startTickeys.sh stop"
     '';
   };
 }

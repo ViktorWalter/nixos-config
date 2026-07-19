@@ -1,0 +1,212 @@
+if g:user_mode == "1"
+
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+endif
+
+
+   map [[ ?{<CR>w99[{
+   map ][ /}<CR>b99]}
+   map ]] j0[[%/{<CR>
+   map [] k$][%?}<CR>
+
+  set scrolloff=5                " ads cursor margin for the edge of the page
+  map <Leader>d :redraw!<CR>
+  set mef="/tmp/vim##.err"
+  map <Leader>m :w\|make\|redraw!\|cc<CR>
+  ":w<CR>:call VimuxRunCommand("cd ~/ros_workspace; clear; catkin_make --pkg zedhack")<CR>
+  " jump to build split
+  "map <Leader>M :call VimuxInspectRunner()<CR>
+  " close the vimmux window
+  map <Leader>l :ccl<CR>
+  " building ctags
+  "command! MakeTags :call VimuxRunCommand("generateTags; :q")<CR>
+  "
+  """""""""""""""""""""""""""""""
+
+  set cursorline
+  " set cursorcolumn
+
+  au BufNewFile,BufRead *.cl setlocal ft=c
+
+  au BufNewFile,BufRead *.tex map <Leader>m :w<CR>:VimtexCompile<CR>
+  au BufNewFile,BufRead *.tex map <Leader>. :w<CR>:VimtexView<CR>
+  au BufNewFile,BufRead *.tex setlocal spell spelllang=en_us
+  au BufNewFile,BufRead *.tex setlocal wrap
+  au BufNewFile,BufRead *.tex setlocal ft=tex
+  let g:tex_comment_nospell= 1
+  au BufNewFile,BufRead *.tex setlocal fdm=expr
+  au BufNewFile,BufRead *.tex setlocal foldexpr=vimtex#fold#level(2)
+  au BufNewFile,BufRead *.tex set lazyredraw
+  au BufNewFile,BufRead *.tex set nocursorline
+  au BufNewFile,BufRead *.tex set nocursorcolumn
+  set nowrap
+
+  au BufNewFile,BufRead,BufEnter *.sk let &makeprg='./compile_sketch.sh %'
+
+  set path+=**
+  set wildmenu
+  " unmap <S-J>
+  " unmap <S-K>
+  " set lazyredraw "makes scrooling faster
+
+  " Write into protected file without prior sudo
+  cmap w!! w suda://%
+  let @t = '!!toilet -f big'
+
+  "MATLAB development ==================================
+
+  function! GetMatlabPane()
+    let b:matlabPane=system("tmux list-panes -F '#{pane_current_command} #{session_name} #{window_index} #{pane_id}' |awk '/MATLAB/ {printf \"%s\:%s.%s\",$2,$3,$4}'")
+    if b:matlabPane == ""
+      set nolazyredraw
+      let b:matlabPane=system("sleep 2; tmux split-window -h \"cd `pwd`;export DISPLAY=:0.0;  env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia /home/viktor/MATLAB/bin/matlab -nodesktop -nosplash -nosoftwareopengl\";tmux last-pane; sleep 2; tmux list-panes -F '#{pane_current_command} #{session_name} #{window_index} #{pane_id}' |awk '/MATLAB/ {printf \"%s\:%s.%s\",$2,$3,$4}'; tmux resize-pane -R")
+      set lazyredraw
+    end
+    return b:matlabPane
+  endfunction
+
+  function! PrepMatlab()
+    let b:matlabPane = call('GetMatlabPane',[])
+    let b:matlabRun="tmux send-keys -t ".escape(b:matlabPane,'%')." \"run ".expand('%')."\" Enter"
+    " let b:matlabRun=&makeprg
+    return b:matlabRun
+  endfunction
+  au BufNewFile,BufRead,BufEnter *.m let &makeprg=PrepMatlab()
+
+  function! MatlabSendCommand()
+    y m
+    let b:matlabPane = call('GetMatlabPane',[])
+    let b:matlabSend="tmux send-keys -t ".escape(b:matlabPane,'%')." ".substitute(shellescape(@m), '\n',' ', 'g')." Enter"
+    silent execute(":!".b:matlabSend)
+    redraw!
+    echo b:matlabSend
+  endfunction
+  map <Leader>s :call MatlabSendCommand()<CR>
+
+  function! MatlabStopExecution()
+    y m
+    let b:matlabPane = call('GetMatlabPane',[])
+    let b:matlabSend="tmux send-keys -t ".escape(b:matlabPane,'%')." "."C-c"
+    silent execute(":!".b:matlabSend)
+    redraw!
+    echo b:matlabSend
+  endfunction
+  map <Leader>d :call MatlabStopExecution()<CR>
+
+  function! MatlabScrollUp()
+    y m
+    let b:matlabPane = call('GetMatlabPane',[])
+    let b:matlabSend="tmux copy-mode -t ".escape(b:matlabPane,'%')."\; tmux send-keys -t ".escape(b:matlabPane,'%')." "."C-u"
+    silent execute(":!".b:matlabSend)
+    redraw!
+    echo b:matlabSend
+  endfunction
+  map <C-u> :call MatlabScrollUp()<CR>
+  "~MATLAB development ==================================
+
+  function! PrepRos()
+python3 << EOS
+try:
+   import rospkg
+   import vim
+except ImportError:
+   vim.command("let is_ros='N/A'")
+pkgname = rospkg.get_package_name(vim.eval("expand('%:p')"))
+try:
+  if pkgname:
+    r = rospkg.RosPack()
+    vim.command("let is_ros='true'")
+    vim.command("let &makeprg='cd "+r.get_path(pkgname).split('src/',1)[0]+"; tmux split-window -h \"source ~/.zshrc; cbl "+pkgname+"\"; tmux resize-pane -R'")
+  else:
+    vim.command("let is_ros='false'")
+except:
+    vim.command("let is_ros='N/A'")
+EOS
+    if is_ros == "true"
+      set efm=%f:%l:%c:\ error:%m
+    endif
+  endfunction
+  au BufNewFile,BufRead,BufEnter *.cpp,*h,*hpp call PrepRos()
+
+function! SetColors()
+  let g:lightline = {
+        \ 'colorscheme': 'wombat',
+        \ }
+  " colorscheme raggi 
+  colorscheme jellybeans " JELLYBEANS COLOR_SCHEME ACTIVE 
+  hi NonText guibg=NONE ctermbg=NONE
+
+  hi TabLineSel ctermbg=45
+  hi TabLineFill ctermbg=45
+  " hi TabLine ctermbg=0 ctermfg=45
+  " hi Title ctermbg=45
+
+
+  hi StartifyHeader ctermfg=39 cterm=bold
+  hi StartifyFooter ctermfg=39 cterm=bold
+  hi Normal ctermfg=39
+
+  hi TabLine ctermbg=0 ctermfg=129
+  hi Title ctermbg=129
+
+
+  " hi StartifyHeader ctermfg=129 cterm=bold
+  " hi StartifyFooter ctermfg=129 cterm=bold
+  " hi Normal ctermfg=129
+  
+  hi Normal guibg=NONE ctermbg=NONE
+  hi NonText guibg=NONE ctermbg=NONE
+  hi ColorColumn ctermbg=100
+  call matchadd('ColorColumn', '\%81v',100)
+endfunction
+
+function! s:isolation_enter()
+  let g:ycm_show_diagnostics_ui=0
+  silent YcmRestartServer
+  let b:isTmuxZoomed=system("tmux list-panes -F '\\#F' | grep Z")
+  if b:isTmuxZoomed == ""
+   silent execute(":!tmux resize-pane -Z")
+ endif
+ silent execute(":!tmux set status off")
+ silent execute(":!i3-msg fullscreen enable")
+  set nocursorline
+  set nocursorcolumn
+
+  set wrap
+
+endfunction
+
+au! User GoyoEnter nested call <SID>isolation_enter()
+
+function! s:isolation_leave()
+  " call SetColors()
+ let b:isTmuxZoomed=system("tmux list-panes -F '\\#F' | grep Z")
+ if !(b:isTmuxZoomed == "")
+   silent execute(":!tmux resize-pane -Z")
+ endif
+ silent execute(":!tmux set status on")
+ silent execute(":!i3-msg fullscreen disable")
+  set cursorline
+  set cursorcolumn
+  let g:ycm_show_diagnostics_ui=1
+  silent YcmRestartServer
+endfunction
+au! User GoyoLeave nested call <SID>isolation_leave()
+
+nmap <leader><leader> :if exists('#goyo')==0<CR>Goyo 100-20<CR>else<CR>Goyo!<CR>endif<CR><CR>
+
+" au FileType qf call AdjustWindowHeight(3, 10)
+
+" fun! ShowFuncName()
+"   let lnum = line(".")
+"   let col = col(".")
+"   echohl ModeMsg
+"   echo getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
+"   echohl None
+"   call search("\\%" . lnum . "l" . "\\%" . col . "c")
+" endfun
+" map f :call ShowFuncName() <CR>
+
+call SetColors()
+endif
