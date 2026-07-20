@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ hostName, config, pkgs, ... }:
 
 {
   home.packages = [ pkgs.terminus_font ];
@@ -7,9 +7,8 @@
   programs.urxvt = {
     enable = true;
 
-    fonts = [
-      "xft:Terminus:size=10"
-    ];
+    fonts = if hostName == "viktorGPD" then [ "xft:Terminus:size=20" ]
+            else                            [ "xft:Terminus:size=10" ];
     
 
     iso14755 = false;
