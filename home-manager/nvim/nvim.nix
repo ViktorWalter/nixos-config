@@ -8,7 +8,7 @@ in
 
   home.file.".vim" = {
     source = ./dotvimdir;
-    recursive = true;
+    recursive = false;
   };
 
   programs.neovim = {
