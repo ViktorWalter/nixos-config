@@ -11,7 +11,7 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sdhci_acpi" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-intel" "gpd_pocket_fan" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
