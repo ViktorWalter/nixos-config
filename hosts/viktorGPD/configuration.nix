@@ -59,7 +59,7 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.displayManager.setupCommands = ''
-    '${pkgs.xorg.xrandr}/bin/xrandr --output DSI-1 --rotate right
+    ${pkgs.xrandr}/bin/xrandr --output DSI-1 --rotate right
   '';
   services.xserver.windowManager.i3 = {
     enable = true;

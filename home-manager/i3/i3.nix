@@ -306,12 +306,12 @@ in
       # bindsym $mod+g exec "sudo ~/.i3/startTickeys.sh stop"
       #
 
-      include ~/.i3/my.config
+      include ~/.my.i3.config
     '';
   };
 
   # make the additionall zshrc editable from home
-  home.file.".i3/my.config".source = 
+  home.file.".my.i3.config".source = 
     config.lib.file.mkOutOfStoreSymlink
     "${here}/${hostName}-doti3config";
 }
