@@ -6,7 +6,7 @@ in
   home.packages = [ pkgs.font-awesome ];
   home.file.".i3" = {
     source = ./doti3;
-    recursive = true;
+    recursive = false;
   };
 
   xsession.windowManager.i3 = {
