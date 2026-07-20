@@ -313,5 +313,5 @@ in
   # make the additionall zshrc editable from home
   home.file.".i3/my.config".source = 
     config.lib.file.mkOutOfStoreSymlink
-    "${here}/doti3/${hostName}-doti3config";
+    "${here}/${hostName}-doti3config";
 }
