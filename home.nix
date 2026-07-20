@@ -9,6 +9,7 @@
     ./home-manager/x11/x11.nix
     ./home-manager/tmux/tmux.nix
     ./home-manager/tmux/tmux.nix
+    ./home-manager/git/git.nix
   ]
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix

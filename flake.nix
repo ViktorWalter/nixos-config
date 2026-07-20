@@ -43,7 +43,7 @@
           specialArgs = { inherit hostName; inherit athame-flake; inherit pkgsOld; };
           modules = [
             { nixpkgs.overlays = [ athameOverlay ]; }
-            ./configuration.nix
+            ./hosts/${hostName}/configuration.nix
 
             home-manager.nixosModules.home-manager
             {
@@ -63,6 +63,7 @@
       in {
         nixosConfigurations = {
           viktorPC = mkHost {hostName = "viktorPC"; };
+          viktorGPD = mkHost {hostName = "viktorGPD"; };
       };
     };
 

@@ -207,30 +207,6 @@ in
 
       for_window [class="firefox"] move to workspace number 5
 
-      # i3bar
-      bar {
-          status_command i3blocks -c ~/.i3/i3blocks.conf
-          font pango: Terminus , Font Awesome 7 Free Bold 13
-          height 25
-
-          bindsym button4 nop
-          bindsym button5 nop
-
-          colors {
-            statusline $text_color
-            background $transparent
-            separator  $active_background
-
-            #                     border                background          text
-            focused_workspace   $focused_ws_bg        $focused_ws_bg      $transparent
-            active_workspace    $focused_ws_bg        $transparent        $focused_ws_bg
-            inactive_workspace  $inactive_background  $transparent        $inactive_text_color
-            binding_mode        $transparent          $transparent        $active_text_color
-            urgent_workspace    #ff0000               $transparent        #ff0000
-          }
-
-          position bottom
-      }
 
       # gaps
       gaps inner 5
