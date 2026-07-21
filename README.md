@@ -50,10 +50,11 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 ### Post installation steps
 TODO: Ideally, these should all be automated
 1. if sudo password for `userName` is not accepted, log in as `root` and use `sudo passwd userName`
-2. in `neovim`, call `:PlugInstall`
-3. `cd /etc/nixos && git remote set-url origin git@github.com:ViktorWalter/nixos-config.git`
-4. Set up `ssh` keys (for **[F]** use e.g. `ssh-keygen -t ed25519 -C "currHostName_key"` and distribute the public key)
+2. `cd /etc/nixos && git remote set-url origin git@github.com:ViktorWalter/nixos-config.git`
+3. Set up `ssh` keys (for **[F]** use e.g. `ssh-keygen -t ed25519 -C "currHostName_key"` and distribute the public key)
+4. Add, commit and push new configs and changes from `/etc/nixos`
 5. Migrate firefox profile
+6. In `neovim`, call `:PlugInstall`
 
 ## File structure
 The setup is based on [Nix Flakes](https://wiki.nixos.org/wiki/NixOS_system_configuration#Defining_NixOS_as_a_flake) .
