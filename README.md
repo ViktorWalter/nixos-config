@@ -1,4 +1,6 @@
 # Config files for building NixOS for my machines
+<img src="https://github.com/NixOS/nixos-artwork/blob/master/logo/nixos.svg" width="350" alt="NixOS logo">
+
 ## Installation instructions
 ### Prepare and boot NixOS live disk
 1. Download NixOS 26.05 (or newer) `.iso` file for manual installation
