@@ -18,6 +18,27 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
 
+  nixpkgs.overlays = [
+    (final: prev: {
+     grub2 = prev.grub2.overrideAttrs (old: {
+         pname = "grub-rotated";
+         version = "unstable-2024-06-18";
+         src = final.fetchFromGitHub {
+         owner = "kbader94";
+         repo = "grub";
+         rev = "main"; # pin to a real commit hash
+         hash = ""; # nix will report the correct hash on first build
+         };
+         patches = [ ];
+         });
+     })
+  ];
+
+  boot.loader.grub.extraConfig = ''
+    set rotation=90
+  '';
+
+
   networking.hostName = "viktorGPD";
 
   # Configure network connections interactively with nmcli or nmtui.
@@ -133,6 +154,7 @@
     ranger
     xlsfonts
     hyfetch
+    htop-vim
   ];
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
 
