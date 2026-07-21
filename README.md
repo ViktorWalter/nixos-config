@@ -32,7 +32,7 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 3. `sudo mkswap /mnt/.swapfile`
 4. `sudo swapon /mnt/.swapfile`
 ### Configure system
-**[F]** denotes steps to do if on an entirely new device (**[F]**resh). The hostname of the current machine used in this example is `currHostName` and user is `userName`:
+**[F]** denotes steps to do if on an entirely new device ( **[F]** resh). The hostname of the current machine used in this example is `currHostName` and user is `userName`:
 1. `sudo nixos-generate-config --root /mnt` **[F]**
 2. `cp /etc/nixos/hardware-configuration.nix ~/` **[F]**
 3. `sudo rm -rf /etc/nixos` **[F]**
