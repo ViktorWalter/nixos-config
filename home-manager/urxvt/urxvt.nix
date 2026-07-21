@@ -7,7 +7,7 @@
   programs.urxvt = {
     enable = true;
 
-    fonts = if hostName == "viktorGPD" then [ "xft:Terminus:size=20" ]
+    fonts = if hostName == "viktorGPD" then [ "xft:Terminus:size=24" ]
             else                            [ "xft:Terminus:size=10" ];
     
 
