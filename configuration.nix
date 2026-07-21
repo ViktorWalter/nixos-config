@@ -132,6 +132,7 @@
     xlsfonts
     hyfetch
     htop-vim
+    thunar
     networkmanagerapplet   # provides nm-applet
     pasystray               # pa-applet's package name; some channels call it pa-applet too
     blueman                 # provides blueman-applet
