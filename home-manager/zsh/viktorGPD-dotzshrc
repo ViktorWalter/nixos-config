@@ -1,0 +1,87 @@
+export PATH=$PATH:/home/viktor/MATLAB/R2018b/bin/
+alias mn='matlab -nodesktop -nosplash'
+
+alias zath="/home/viktor/git/linux-setup/appconfig/i3/doti3/detacher.sh \"zathura\""
+
+
+
+export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# TERM=xterm-256color
+
+alias cdphone='. ~/localpath/cdphone'
+
+
+export PATH=$PATH:/home/viktor/localpath/
+export PATH=$PATH:/home/viktor/localpath/scripts
+for d in /home/viktor/localpath/scripts/*/; do; 
+  export PATH=$PATH:${d}
+done
+
+source ~/git/linux-setup/appconfig/shell/commons.sh_git
+
+alias vpn=mullvad
+alias sup='xdotool getactivewindow set_window --classname "mail"; RUBYOPT="-W0" sup'
+
+totd () {
+  cd ~/Games/TotD
+  wine Tod_e.exe
+}
+
+alias mw=mount_windata.sh
+
+echo "TODO:"                                                                                                                                             
+cat ~/todo.txt | grep -v "#"
+
+if [[ ! -z `xsetwacom --list devices | head -n1` ]]; then  
+  xsetwacom --set "Wacom Intuos S Pad pad" Button +1 "key ctrl" "key z" 
+  xsetwacom --set "Wacom Intuos S Pad pad" Button +2 "key ctrl" "key shift" "key z" 
+  xsetwacom --set "Wacom Intuos S Pad pad" Button +3 "key ctrl" "key s" 
+  xsetwacom --set "Wacom Intuos S Pad pad" Button +8 "key e" 
+  xsetwacom --set "Wacom Intuos S Pen stylus" Mode "Relative"
+  # xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput DisplayPort-2
+fi
+
+export UAV_NAME="uav1" 
+export NATO_NAME="" # lower-case name of the UAV frame {alpha, bravo, charlie, ...}
+export RUN_TYPE="simulation" # {simulation, uav}
+export UAV_TYPE="f450" # {f550, f450, t650, eagle, naki}
+export PROPULSION_TYPE="default" # {default, new_esc, ...}
+export ODOMETRY_TYPE="gps" # {gps, optflow, hector, vio, ...}
+export INITIAL_DISTURBANCE_X="0.0" # [N], external disturbance in the body frame
+export INITIAL_DISTURBANCE_Y="0.0" # [N], external disturbance in the body frame
+export STANDALONE="false" # disables the core nodelet manager
+export SWAP_GARMINS="false" # swap up/down garmins
+export PIXGARM="false" # true if Garmin lidar is connected throught Pixhawk
+export SENSORS="rplidar, garmin_down" # {garmin_down, garmin_up, rplidar, realsense_front, teraranger, bluefox_optflow, realsense_brick, bluefox_brick}
+export WORLD_NAME="simulation" # e.g.: "simulation" <= mrs_general/config/world_simulation.yaml
+export MRS_STATUS="readme" # {readme, dynamics, balloon, avoidance, control_error, gripper}
+export LOGGER_DEBUG="false" # sets the ros console output level to debug
+
+export FIGNORE=HDD_X
+
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+
+# load tmux automatically
+if [ ! -z "$INTERACTIVE_SHELL" ]; then # when loaded interactively, run tmux
+  if [ "$RUN_TMUX" = "true" ]; then
+    if command -v $TMUX_BIN>/dev/null; then
+        [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && runTmux
+    fi
+  fi
+fi
+
+ros
+
+export PATH="$PATH:/opt/rocm/bin"
+
+# if [ -e /home/viktor/.nix-profile/etc/profile.d/nix.sh ]; then . /home/viktor/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+ export DISPLAY=:0
+
+export ROS_DOMAIN=66
+
+export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share
