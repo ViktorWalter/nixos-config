@@ -15,10 +15,10 @@
   boot.extraModulePackages = [ ];
 
   boot.kernelParams = [
-    # "reboot=acpi"   # try this first
+    "reboot=acpi"   # try this first
     # if that doesn't help, try one of these instead:
     # "reboot=pci"
-    "reboot=efi"
+    # "reboot=efi"
     # "reboot=bios"
   ];
 
