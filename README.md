@@ -54,3 +54,14 @@ TODO: Ideally, these should all be automated
 3. `cd /etc/nixos && git remote set-url origin git@github.com:ViktorWalter/nixos-config.git`
 4. Set up `ssh` keys (for **[F]** use e.g. `ssh-keygen -t ed25519 -C "currHostName_key"` and distribute the public key)
 5. Migrate firefox profile
+
+## File structure
+The setup is based on [Nix Flakes](https://wiki.nixos.org/wiki/NixOS_system_configuration#Defining_NixOS_as_a_flake) .
+- The "main" file is `./flake.nix` with the most high-level settings.
+`.flake.nix` then references `./configuration.nix`, one of `./hosts/currHostName/configuration.nix` files and `./home.nix`.
+The file is associated with `flake.lock` that locks down specific versions of packages.
+- `./configuration.nix` contains basic configurations that should apply to all my machines. (TODO: this change is not yet committed from the testing machine)
+- `./hosts/currHostName/configuration.nix` contains configuration extensions specific to a given machine and it references the associated `hosts/currHostName/hardware-configuration.nix` generated in a fresh install.
+- `./home.nix` is a config for [Home Mangaer](https://wiki.nixos.org/wiki/Home_Manager) that references module files from `.home-manager` containing configurations of various programs
+
+In some files, the `hostName` variable is used ad-hoc to make some steps specific to a certain machine
