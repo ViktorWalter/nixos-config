@@ -18,8 +18,8 @@
     # "reboot=acpi"   # try this first
     # if that doesn't help, try one of these instead:
     # "reboot=pci"
-    # "reboot=efi"
-    "reboot=bios"
+    "reboot=efi"
+    # "reboot=bios"
   ];
 
   fileSystems."/" =
