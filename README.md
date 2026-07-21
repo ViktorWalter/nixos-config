@@ -67,8 +67,8 @@ The file is associated with `flake.lock` that locks down specific versions of pa
 
 In some files, the `hostName` variable is used ad-hoc to make some steps specific to a certain machine
 ## Usage notes
-Whenever you make a change in these configs, run `sudo nixos-rebuild switch` to apply them.
-Most program configurations such as for `i3`, `neovim`, etc. are generated from `.nix` files in `./home-manager`.
+- Whenever you make a change in these configs, run `sudo nixos-rebuild switch` to apply them.
+- Most program configurations such as for `i3`, `neovim`, etc. are generated from `.nix` files in `./home-manager`.
 These are intended to be edited with care such that they remain universally suitable for my future machines.
-For "ad-hoc" changes that are host-specific, I source sub-configs such as `~/.my.vimrc` which are linked to host-specific files such as `./home-manager/i3/currHostName-dotvimrc` using the `.nix` configs.
+- For "ad-hoc" changes that are host-specific, I source sub-configs such as `~/.my.vimrc` which are linked to host-specific files such as `./home-manager/i3/currHostName-dotvimrc` using the `.nix` configs.
 This allows me to do spurious, non-universal additions or changes to program behavior from `~/` and then commit the changes from `/etc/nixos`.
