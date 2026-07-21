@@ -1,11 +1,11 @@
 # Config files for building NixOS for my machines
 ## Installation instructions
 ### Prepare and boot NixOS live disk
-1. Download NixOS 26.05 (or newer) .iso
+1. Download NixOS 26.05 (or newer) `.iso` file
 2. Burn to flash drive using `sudo dd if=/path/to/filename.iso of=/dev/sdX bs=4M status=progress`
 3. Boot to flash drive and run the live drive
 ### Partition setup
-In this example our two partitions are sda1 and sda2 from device sda. Replace with equivalent for specific hardware.
+In this example our two partitions are `sda1` and `sda2` from device `sda`. Replace with equivalent for specific hardware.
 1. `sudo fdisk /dev/sda`
 2. `g` (gpt disk label)
 3. `n`
@@ -27,10 +27,10 @@ In this example our two partitions are sda1 and sda2 from device sda. Replace wi
 2. `sudo mkdir -p /mnt/boot`
 3. `sudo mount /dev/disk/by-label/NIXBOOT /mnt/boot`
 ### Create swap file
-1. sudo dd if=/dev/zero of=/mnt/.swapfile bs=1024 count=2097152 # 2GB size
-sudo chmod 600 /mnt/.swapfile
-sudo mkswap /mnt/.swapfile
-sudo swapon /mnt/.swapfile
+1. `sudo dd if=/dev/zero of=/mnt/.swapfile bs=1024 count=2097152` (2GB size)
+2. `sudo chmod 600 /mnt/.swapfile`
+3. `sudo mkswap /mnt/.swapfile`
+4. `sudo swapon /mnt/.swapfile`
 ### Configure system
 **[F]** denotes steps to do if on an entirely new device (**[F]**resh). The hostname of the current machine used in this example is `currHostName` and user is `userName`:
 1. `sudo nixos-generate-config --root /mnt` **[F]**
@@ -46,7 +46,7 @@ sudo swapon /mnt/.swapfile
 11. edit `./flake.nix` and add `currHostName = mkHost {hostName = "currHostName"; };` to ` nixosConfigurations` **[F]**
 12. `sudo nixos-install --flake /mnt/etc/nixos#currHostName`
 13. when prompted, insert root password
-14. reboot to new OS installation
+14. `sudo reboot` to new OS installation, remove flash drive
 ### Post installation steps
 TODO: Ideally, these should all be automated
 1. if sudo password for `userName` is not accepted, log in as `root` and use `sudo passwd userName`
