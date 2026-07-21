@@ -119,8 +119,8 @@
   };
 
   programs.firefox.enable = true;
-  #programs.zsh.enable = true;
-
+  programs.dconf.enable = true;
+  
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   #
@@ -133,9 +133,6 @@
     hyfetch
     htop-vim
     thunar
-    networkmanagerapplet   # provides nm-applet
-    pasystray               # pa-applet's package name; some channels call it pa-applet too
-    blueman                 # provides blueman-applet
 
   ];
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
