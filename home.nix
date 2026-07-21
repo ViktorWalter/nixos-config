@@ -11,6 +11,7 @@
     ./home-manager/tmux/tmux.nix
     ./home-manager/git/git.nix
     ./home-manager/other/other.nix
+    ./home-manager/neofetch/neofetch.nix
   ]
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix
