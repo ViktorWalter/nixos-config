@@ -1,7 +1,7 @@
 # Config files for building NixOS for my machines
 ## Installation instructions
 ### Prepare and boot NixOS live disk
-1. Download NixOS 26.05 (or newer) `.iso` file
+1. Download NixOS 26.05 (or newer) `.iso` file for manual installation
 2. Burn to flash drive using `sudo dd if=/path/to/filename.iso of=/dev/sdX bs=4M status=progress`
 3. Boot to flash drive and run the live drive
 ### Partition setup
