@@ -7,7 +7,7 @@
     ./home-manager/urxvt/urxvt.nix
     ./home-manager/rofi/rofi.nix
     ./home-manager/x11/x11.nix
-    ./home-manager/tmux/tmux.nix
+    ./home-manager/tray/tray.nix
     ./home-manager/tmux/tmux.nix
     ./home-manager/git/git.nix
     ./home-manager/other/other.nix

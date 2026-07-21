@@ -20,6 +20,10 @@
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
 
+  # Bluetooth + blueman service (needed for blueman-applet)
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.viktor = {
     isNormalUser = true;
@@ -128,6 +132,10 @@
     xlsfonts
     hyfetch
     htop-vim
+    networkmanagerapplet   # provides nm-applet
+    pasystray               # pa-applet's package name; some channels call it pa-applet too
+    blueman                 # provides blueman-applet
+
   ];
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
 

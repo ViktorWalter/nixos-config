@@ -35,5 +35,9 @@
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DSI-1 --rotate right
   '';
+
+  environment.systemPackages = with pkgs; [
+    cbatticon
+  ];
 }
 
