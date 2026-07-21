@@ -1,0 +1,108 @@
+if g:user_mode == "1"
+
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+endif
+
+
+   map [[ ?{<CR>w99[{
+   map ][ /}<CR>b99]}
+   map ]] j0[[%/{<CR>
+   map [] k$][%?}<CR>
+
+  set scrolloff=5                " ads cursor margin for the edge of the page
+  map <Leader>d :redraw!<CR>
+  set mef="/tmp/vim##.err"
+  map <Leader>m :w\|make\|redraw!\|cc<CR>
+  ":w<CR>:call VimuxRunCommand("cd ~/ros_workspace; clear; catkin_make --pkg zedhack")<CR>
+  " jump to build split
+  "map <Leader>M :call VimuxInspectRunner()<CR>
+  " close the vimmux window
+  map <Leader>l :ccl<CR>
+  " building ctags
+  "command! MakeTags :call VimuxRunCommand("generateTags; :q")<CR>
+  "
+  """""""""""""""""""""""""""""""
+
+  set cursorline
+  " set cursorcolumn
+
+  au BufNewFile,BufRead *.cl setlocal ft=c
+
+  au BufNewFile,BufRead *.tex map <Leader>m :w<CR>:VimtexCompile<CR>
+  au BufNewFile,BufRead *.tex map <Leader>. :w<CR>:VimtexView<CR>
+  au BufNewFile,BufRead *.tex setlocal spell spelllang=en_us
+  au BufNewFile,BufRead *.tex setlocal wrap
+  au BufNewFile,BufRead *.tex setlocal ft=tex
+  let g:tex_comment_nospell= 1
+  au BufNewFile,BufRead *.tex setlocal fdm=expr
+  au BufNewFile,BufRead *.tex setlocal foldexpr=vimtex#fold#level(2)
+  au BufNewFile,BufRead *.tex set lazyredraw
+  au BufNewFile,BufRead *.tex set nocursorline
+  au BufNewFile,BufRead *.tex set nocursorcolumn
+  set nowrap
+
+  au BufNewFile,BufRead,BufEnter *.sk let &makeprg='./compile_sketch.sh %'
+
+  set path+=**
+  set wildmenu
+  " unmap <S-J>
+  " unmap <S-K>
+  " set lazyredraw "makes scrooling faster
+
+  " Write into protected file without prior sudo
+  cmap w!! w suda://%
+  let @t = '!!toilet -f big'
+
+
+function! SetColors()
+  let g:lightline = {
+        \ 'colorscheme': 'wombat',
+        \ }
+  " colorscheme raggi 
+  colorscheme jellybeans " JELLYBEANS COLOR_SCHEME ACTIVE 
+  hi NonText guibg=NONE ctermbg=NONE
+
+  hi TabLineSel ctermbg=45
+  hi TabLineFill ctermbg=45
+  " hi TabLine ctermbg=0 ctermfg=45
+  " hi Title ctermbg=45
+
+
+  hi StartifyHeader ctermfg=39 cterm=bold
+  hi StartifyFooter ctermfg=39 cterm=bold
+  hi Normal ctermfg=39
+
+  hi TabLine ctermbg=0 ctermfg=129
+  hi Title ctermbg=129
+
+
+  " hi StartifyHeader ctermfg=129 cterm=bold
+  " hi StartifyFooter ctermfg=129 cterm=bold
+  " hi Normal ctermfg=129
+  
+  hi Normal guibg=NONE ctermbg=NONE
+  hi NonText guibg=NONE ctermbg=NONE
+  hi ColorColumn ctermbg=100
+  call matchadd('ColorColumn', '\%81v',100)
+endfunction
+
+function! s:isolation_enter()
+  let g:ycm_show_diagnostics_ui=0
+  silent YcmRestartServer
+  let b:isTmuxZoomed=system("tmux list-panes -F '\\#F' | grep Z")
+  if b:isTmuxZoomed == ""
+   silent execute(":!tmux resize-pane -Z")
+ endif
+ silent execute(":!tmux set status off")
+ silent execute(":!i3-msg fullscreen enable")
+  set nocursorline
+  set nocursorcolumn
+
+  set wrap
+
+endfunction
+
+
+call SetColors()
+endif
