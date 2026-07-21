@@ -43,7 +43,8 @@
           specialArgs = { inherit hostName; inherit athame-flake; inherit pkgsOld; };
           modules = [
             { nixpkgs.overlays = [ athameOverlay ]; }
-            ./hosts/${hostName}/configuration.nix
+            ./configuration.nix #generic
+            ./hosts/${hostName}/configuration.nix #specific
 
             home-manager.nixosModules.home-manager
             {
