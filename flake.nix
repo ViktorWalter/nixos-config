@@ -45,7 +45,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit hostName athame-flake; }; 
+              home-manager.extraSpecialArgs = { inherit hostName athame-flake self; }; 
               home-manager.users.viktor = import ./home.nix;
             }
 

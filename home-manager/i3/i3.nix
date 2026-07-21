@@ -1,6 +1,9 @@
 { hostName, config, pkgs, lib, ... }:
 let
-  here = toString ./.;
+  realRoot = "/etc/nixos";
+  # subtract the store-copy prefix from this file's path, leaving e.g. "/hosts/myhost"
+  relative = lib.removePrefix (toString self) (toString ./.);
+  here = realRoot + relative;
 in
 {
   home.packages = [ pkgs.font-awesome ];
