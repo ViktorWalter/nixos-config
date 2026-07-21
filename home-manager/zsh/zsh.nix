@@ -1,4 +1,4 @@
-{ hostName, config, pkgs, lib, ... }:
+{ hostName, athame-flake, config, pkgs, lib, ... }:
 
 let
   here = toString ./.;
@@ -6,7 +6,7 @@ in
 {
   programs.zsh = {
     enable = true;
-    package = pkgs.athame-zsh;
+    package = athame-flake.defaultPackage.${pkgs.system};
 
     autosuggestion.enable = false;
     syntaxHighlighting.enable = true;
