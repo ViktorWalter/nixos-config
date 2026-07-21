@@ -13,7 +13,10 @@
 
     athame-flake = {
       url = "github:simonvpe/athame-flake";
-      # inputs.nixpkgs.follows = "nixpkgs-old";
+      inputs.nixpkgs.url = "github:NixOS/nixpkgs/2deb07f3ac4eeb5de1c12c4ba2911a2eb1f6ed61";
+      #with this specific nixpkgs it should resolve to the same commit the author used, but in a more reliable way than without it.
+      #my machine tended to override it such that athame was built with zsh 5.9, rather than the more reliably compatible 5.8.
+      #the reason is that the author locked it using local nixpkgs channel that is not available to me, so NixOS just defaults to my own.
     };
 
   };
@@ -24,17 +27,17 @@
 
       #An overlay that adds `pkgs.athame-zsh` everywhere pkgs is used —
       # both in NixOS modules and (via useGlobalPkgs) in home-manager.
-      athameOverlay = final: prev: {
-        athame-zsh = final.callPackage ./pkgs/athame-zsh.nix { inherit athame-flake; };
-      };
+      # athameOverlay = final: prev: {
+      #   athame-zsh = final.callPackage ./pkgs/athame-zsh.nix { inherit athame-flake; };
+      # };
 
 
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName; inherit athame-flake; };
+          specialArgs = { inherit hostName athame-flake; };
           modules = [
-            { nixpkgs.overlays = [ athameOverlay ]; }
+            # { nixpkgs.overlays = [ athameOverlay ]; }
             ./configuration.nix #generic
             ./hosts/${hostName}/configuration.nix #specific
 

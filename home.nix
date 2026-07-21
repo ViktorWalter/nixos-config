@@ -1,4 +1,4 @@
-{ hostName, config, pkgs, lib, ... }:
+{ hostName, athame-flake, config, pkgs, lib, ... }:
 {
   imports = [
     ./home-manager/zsh/zsh.nix

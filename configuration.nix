@@ -3,6 +3,9 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 { config, pkgs, athame-flake, ... }:
+  let
+    athameZsh = athame-flake.defaultPackage.${pkgs.system};
+  in
 {
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -130,9 +133,9 @@
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";
 
-   environment.shells = [ pkgs.athame-zsh pkgs.bash ];
-   users.users.viktor.shell = pkgs.athame-zsh;
-   users.defaultUserShell = pkgs.athame-zsh;
+   environment.shells = [ "${athameZsh}/bin/zsh" pkgs.bash ];
+   users.users.viktor.shell = "${athameZsh}/bin/zsh";
+   users.defaultUserShell = "${athameZsh}/bin/zsh";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
