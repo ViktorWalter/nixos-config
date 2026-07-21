@@ -1,13 +1,17 @@
-{ hostName, config, pkgs, lib, ... }:
+{ hostName, config, pkgs, lib, self, ... }:
 let
-  here = toString ./.;
+  realRoot = "/etc/nixos";
+  # subtract the store-copy prefix from this file's path, leaving e.g. "/hosts/myhost"
+  relative = lib.removePrefix (toString self) (toString ./.);
+  here = realRoot + relative;
 in
 {
   # git is required for vim-plug's :PlugInstall/:PlugUpdate to work.
   home.packages = [ pkgs.git ];
 
   home.file.".vim" = {
-    source = ./dotvimdir;
+    source = config.lib.file.mkOutOfStoreSymlink
+    "${here}/dotvimdir";
     recursive = false;
   };
 
