@@ -39,7 +39,7 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 4. `git clone https://github.com/ViktorWalter/nixos-config.git ~/`
 5. `sudo mv ~/nixos-config /etc/nixos`
 6. `cd /etc/nixos`
-7. `mkdir hosts/hostName` **[F]**
+7. `mkdir hosts/currHostName` **[F]**
 8. `cp ~/hardware-configuration.nix ./hosts/currHostName/` **[F]**
 9. `cp ./hosts/viktorPC/configuration.nix ./hosts/currHostName/` **[F]** (or choose another config as a template)
 10. edit `./hosts/currHostName` according to the machine specs **[F]**
