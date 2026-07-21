@@ -37,7 +37,7 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 2. `cp /etc/nixos/hardware-configuration.nix ~/` **[F]**
 3. `sudo rm -rf /etc/nixos` **[F]**
 4. `git clone https://github.com/ViktorWalter/nixos-config.git ~/`
-5. `sudo mv ~/nixos-dofig /etc/nixos`
+5. `sudo mv ~/nixos-config /etc/nixos`
 6. `cd /etc/nixos`
 7. `mkdir hosts/hostName` **[F]**
 8. `cp ~/hardware-configuration.nix ./hosts/currHostName/` **[F]**
