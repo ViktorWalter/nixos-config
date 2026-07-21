@@ -14,6 +14,14 @@
   boot.kernelModules = [ "kvm-intel" "gpd_pocket_fan" ];
   boot.extraModulePackages = [ ];
 
+  boot.kernelParams = [
+    "reboot=acpi"   # try this first
+    # if that doesn't help, try one of these instead:
+    # "reboot=pci"
+    # "reboot=efi"
+    # "reboot=bios"
+  ];
+
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/0b311726-013d-4a52-a149-74d3ce48d32a";
       fsType = "ext4";
