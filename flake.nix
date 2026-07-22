@@ -20,7 +20,7 @@
     };
 
     insect-flake = {
-      url = "path:/etc/nixos/pkgs/insect";
+      url = "github:ViktorWalter/insect-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
