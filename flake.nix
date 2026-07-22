@@ -19,23 +19,22 @@
       #the reason is that the author locked it using local nixpkgs channel that is not available to me, so NixOS just defaults to my own.
     };
 
+    insect-flake = {
+      url = "path:/etc/nixos/pkgs/insect";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake,  ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, ... }:
     let
  	    system = "x86_64-linux";
-
-      #An overlay that adds `pkgs.athame-zsh` everywhere pkgs is used —
-      # both in NixOS modules and (via useGlobalPkgs) in home-manager.
-      # athameOverlay = final: prev: {
-      #   athame-zsh = final.callPackage ./pkgs/athame-zsh.nix { inherit athame-flake; };
-      # };
-
 
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake; };
+          specialArgs = { inherit hostName athame-flake insect-flake; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             ./configuration.nix #generic

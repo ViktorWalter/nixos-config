@@ -1,4 +1,4 @@
-{ hostName, athame-flake, config, pkgs, lib, ... }:
+{ hostName, athame-flake, config, pkgs, lib, self, ... }:
 let
   realRoot = "/etc/nixos";
   # subtract the store-copy prefix from this file's path, leaving e.g. "/hosts/myhost"
