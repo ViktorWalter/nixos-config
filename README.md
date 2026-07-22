@@ -46,9 +46,10 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 9. `cp ./hosts/viktorPC/configuration.nix ./hosts/currHostName/` **[F]** (or choose another config as a template)
 10. edit `./hosts/currHostName/configuration.nix` according to the machine specs **[F]**
 11. edit `./flake.nix` and add `currHostName = mkHost {hostName = "currHostName"; };` to ` nixosConfigurations` **[F]**
-12. `sudo nixos-install --flake /mnt/etc/nixos#currHostName`
-13. when prompted, insert root password
-14. `sudo reboot` to new OS installation, remove flash drive
+12. connect to internet - if only WiFi is available do e.g. `nmcli device wifi connect SSID password PASSWORD`
+13. `sudo nixos-install --flake /mnt/etc/nixos#currHostName`
+14. when prompted, insert root password
+15. `sudo reboot` to new OS installation, remove flash drive
 ### Post installation steps
 TODO: Ideally, these should all be automated
 1. if sudo password for `userName` is not accepted, log in as `root` and use `sudo passwd userName`
