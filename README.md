@@ -6,7 +6,12 @@
 1. Download [NixOS](https://nixos.org/download/) 26.05 (or newer) `.iso` file for manual installation
 2. Burn to flash drive using `sudo dd if=/path/to/filename.iso of=/dev/sdX bs=4M status=progress`
 3. Boot to flash drive and run the live drive
-### Partition setup
+
+### Base system preparations
+<details>
+<summary>Set up file system and swap</summary>
+
+#### Partition setup
 In this example our two partitions are `sda1` and `sda2` from device `sda`. Replace with equivalent for specific hardware.
 1. `sudo fdisk /dev/sda`
 2. `g` (gpt disk label)
@@ -24,15 +29,20 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 14. `sudo mkfs.fat -F 32 /dev/sda1`
 15. `sudo fatlabel /dev/sda1 NIXBOOT`
 16. `sudo mkfs.ext4 /dev/sda2 -L NIXROOT`
-### Mount partitions
+
+#### Mount partitions
 1. `sudo mount /dev/disk/by-label/NIXROOT /mnt`
 2. `sudo mkdir -p /mnt/boot`
 3. `sudo mount /dev/disk/by-label/NIXBOOT /mnt/boot`
-### Create swap file
+
+#### Create swap file
 1. `sudo dd if=/dev/zero of=/mnt/.swapfile bs=1024 count=2097152` (2GB size)
 2. `sudo chmod 600 /mnt/.swapfile`
 3. `sudo mkswap /mnt/.swapfile`
 4. `sudo swapon /mnt/.swapfile`
+
+</details>
+
 ### Configure system
 **[F]** denotes steps to do if on an entirely new device ( **[F]** resh). The hostname of the current machine used in this example is `currHostName` and user is `userName`:
 1. `sudo nixos-generate-config --root /mnt` **[F]**
