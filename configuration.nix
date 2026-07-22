@@ -2,9 +2,10 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, athame-flake, ... }:
+{ config, pkgs, athame-flake, insect-flake, ... }:
   let
     athameZsh = athame-flake.defaultPackage.${pkgs.system};
+    insect = insect-flake.packages.${pkgs.system}.default;
   in
 {
 
@@ -124,7 +125,7 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   #
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     wget
     git
     hyfetch
@@ -133,8 +134,12 @@
     hyfetch
     htop-vim
     thunar
+    octave
+  ]) ++ [
+    insect
+    ];
 
-  ];
+
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);
 
    environment.etc."athamerc".source = "${athame-flake.inputs.athame}/athamerc";
