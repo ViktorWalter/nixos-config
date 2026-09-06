@@ -129,7 +129,6 @@
   environment.systemPackages = (with pkgs; [
     wget
     xclip
-    xkbcomp
     git
     hyfetch
     ranger
