@@ -101,7 +101,8 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  # services.pulseaudio.enable = true;
+  services.pulseaudio.enable = true;
+  services.pipewire.enable = false;
   # OR
   # services.pipewire = {
   #   enable = true;
@@ -139,7 +140,9 @@
     hyfetch
     htop-vim
     thunar
+    pavucontrol
     octave
+    xfce4-notifyd
   ]) ++ [
     insect
     ];
