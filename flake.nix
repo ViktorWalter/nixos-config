@@ -24,19 +24,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, nix-flatpak, ... }:
     let
  	    system = "x86_64-linux";
 
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake insect-flake; };
+          specialArgs = { inherit hostName athame-flake insect-flake nix-flatpak; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
+            nix-flatpak.nixosModules.nix-flatpak
             ./configuration.nix #generic
             ./hosts/${hostName}/configuration.nix #specific
 
@@ -53,6 +55,7 @@
              "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
              ];
              })
+
           ];
         };
       in {
