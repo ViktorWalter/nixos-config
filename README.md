@@ -52,7 +52,7 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 1. `sudo nixos-generate-config --root /mnt` **[F]**
 2. `cp /etc/nixos/hardware-configuration.nix ~/` **[F]**
 3. `sudo rm -rf /etc/nixos` **[F]**
-4. `git clone https://github.com/ViktorWalter/nixos-config.git ~/`
+4. `git clone https://github.com/ViktorWalter/nixos-config.git ~/nixos-config`
 5. `sudo mv ~/nixos-config /etc/nixos`
 6. `cd /etc/nixos`
 
