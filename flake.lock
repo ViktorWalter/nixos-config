@@ -101,14 +101,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1784707856,
-        "narHash": "sha256-nOeLrVSFiZMoHchqWnAhXhRlNyLnLcmSv96nNnj0184=",
-        "path": "/etc/nixos/pkgs/insect",
-        "type": "path"
+        "lastModified": 1784710916,
+        "narHash": "sha256-z8wgq+8efr3pVcJXiphOXpH8CcfTD7LB9ZKOrYtyEO4=",
+        "owner": "ViktorWalter",
+        "repo": "insect-flake",
+        "rev": "aef2ee0e7bf17a4e55111cba24ed7946d9b31303",
+        "type": "github"
       },
       "original": {
-        "path": "/etc/nixos/pkgs/insect",
-        "type": "path"
+        "owner": "ViktorWalter",
+        "repo": "insect-flake",
+        "type": "github"
       }
     },
     "nixpkgs": {
