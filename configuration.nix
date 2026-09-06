@@ -93,10 +93,6 @@
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # necessary for minimal WMs like i3
 
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
@@ -133,6 +129,7 @@
   environment.systemPackages = (with pkgs; [
     wget
     xclip
+    xkbcomp
     git
     hyfetch
     ranger
