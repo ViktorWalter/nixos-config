@@ -7,7 +7,12 @@ in
 
   services.network-manager-applet.enable = true;
   services.blueman-applet.enable = true;
-  services.pasystray.enable = true;
+  services.pasystray = {
+    enable = true;
+    extraOptions = [
+      "-g"
+    ];
+  };
 
   services.cbatticon = {
     enable = enableCbatticon;
