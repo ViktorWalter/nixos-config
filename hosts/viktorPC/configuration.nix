@@ -29,6 +29,7 @@
     { device = "/swapfile"; size = 8192; } 
   ];
 
+  #Drive mounting 
   fileSystems."/home/viktor/HDD_X" = {
     device = "/dev/disk/by-uuid/0D99011D4D257278";
     fsType = "ntfs";
@@ -57,6 +58,47 @@
       "nofail"
     ];
   };
+
+
+  #nextcloud config
+  services.nextcloud = {
+    enable = true;
+    package = pkgs.nextcloud33;
+    hostName = import ./nextcloud-hostname.nix; #ignored by git - should contain the url in quotation marks
+    datadir = "/var/lib/nextcloud/data";
+    #home = "/var/lib/nextcloud";
+    config = {
+      dbtype = "sqlite";
+      adminpassFile = null; #these will be overriden by imported configs
+      adminuser = null;
+    };
+    settings.apps_paths = [
+      {
+        path = "${config.services.nextcloud.package}/apps";
+        url = "/apps";
+        writable = false;
+      }
+      {
+        path = "/var/lib/nextcloud/store-apps";
+        url = "/store-apps";
+        writable = true;
+      }
+    ];
+
+    secretFile = "/etc/nextcloud-secrets.json";
+  };
+
+  services.nginx.enable = true;
+
+  
+
+  #threema
+  services.flatpak.packages = [
+    {
+      flatpakref = "https://releases.threema.ch/flatpak/threema-desktop/ch.threema.threema-desktop.flatpakref";
+      sha256 = "0lghiiiphbkqgiprqirxifldvix0j4k04jh1z9f911shrzjgqq4s"; #get with nix-refetch-url
+    }
+  ];
 
 }
 

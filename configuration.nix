@@ -81,6 +81,17 @@
   fonts.fontDir.enable = true;
 
   
+  services.flatpak = {
+    enable = true;
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
+  };
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # necessary for minimal WMs like i3
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
@@ -120,6 +131,7 @@
   #
   environment.systemPackages = (with pkgs; [
     wget
+    xclip
     git
     hyfetch
     ranger

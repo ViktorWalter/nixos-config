@@ -183,6 +183,7 @@ in
 
   home.file.".athamerc".text = ''
     source /etc/athamerc
+    set clipboard=unnamedplus
   '';
 
 }
