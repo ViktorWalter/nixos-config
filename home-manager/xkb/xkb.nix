@@ -48,10 +48,9 @@
     };
   '';
 
-  home.packages = [ pkgs.xorg.setxkbmap ];
+  home.packages = [
+    pkgs.xorg.setxkbmap
+    pkgs.xorg.xkbcomp
+  ];
 
-# Apply it when your X session starts
-  xsession.initExtra = ''
-    ${pkgs.xorg.setxkbmap}/bin/setxkbmap -I$HOME/.xkb -symbols "custom(basic)"
-    '';
 }
