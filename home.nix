@@ -13,6 +13,7 @@
     ./home-manager/git/git.nix
     ./home-manager/other/other.nix
     ./home-manager/neofetch/neofetch.nix
+    ./home-manager/pass/pass.nix
   ]
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix
