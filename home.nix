@@ -15,6 +15,7 @@
     ./home-manager/neofetch/neofetch.nix
     ./home-manager/pass/pass.nix
     ./home-manager/xkb/xkb.nix
+    ./home-manager/joplin/joplin.nix
   ]
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix
