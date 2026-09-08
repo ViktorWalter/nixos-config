@@ -130,6 +130,7 @@
     wget
     xclip
     git
+    git-lfs
     hyfetch
     ranger
     xlsfonts
@@ -139,6 +140,17 @@
     pavucontrol
     octave
     xfce4-notifyd
+    vesktop
+    cava
+    conky
+    krita
+    eog
+    vimiv-qt
+    zathura
+    mpv
+    mpg123
+    yt-dlp
+    python3
   ]) ++ [
     insect
     ];

@@ -40,6 +40,7 @@ in
   
       unset zle_bracketed_paste
       unsetopt share_history
+      setopt INC_APPEND_HISTORY
   
       killp () {
   

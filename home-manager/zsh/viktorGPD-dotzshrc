@@ -66,16 +66,8 @@ NPM_PACKAGES="${HOME}/.npm-packages"
 export PATH="$PATH:$NPM_PACKAGES/bin"
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
-# load tmux automatically
-if [ ! -z "$INTERACTIVE_SHELL" ]; then # when loaded interactively, run tmux
-  if [ "$RUN_TMUX" = "true" ]; then
-    if command -v $TMUX_BIN>/dev/null; then
-        [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && runTmux
-    fi
-  fi
-fi
 
-ros
+#ros
 
 export PATH="$PATH:/opt/rocm/bin"
 
