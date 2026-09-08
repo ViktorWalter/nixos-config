@@ -7,6 +7,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./nextcloud.nix
     ];
 
   networking.hostName = "viktorPC";
@@ -59,39 +60,6 @@
     ];
   };
 
-
-  nix.settings.pure-eval = false;# to allow for the hostname to not be tracked by git - /etc/nextcloud-hostname.txt is secret
-  #nextcloud config
-  services.nextcloud = {
-    enable = true;
-    package = pkgs.nextcloud33;
-    hostName = import ./nextcloud-hostname.nix;
-    datadir = "/var/lib/nextcloud/data";
-    #home = "/var/lib/nextcloud";
-    config = {
-      dbtype = "sqlite";
-      adminpassFile = null; #these will be overriden by imported configs
-      adminuser = null;
-    };
-    settings.apps_paths = [
-      {
-        path = "${config.services.nextcloud.package}/apps";
-        url = "/apps";
-        writable = false;
-      }
-      {
-        path = "/var/lib/nextcloud/store-apps";
-        url = "/store-apps";
-        writable = true;
-      }
-    ];
-
-    secretFile = "/etc/nextcloud-secrets.json";
-  };
-
-  services.nginx.enable = true;
-
-  
 
   #threema
   services.flatpak.packages = [
