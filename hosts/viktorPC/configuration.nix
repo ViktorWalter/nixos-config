@@ -60,11 +60,12 @@
   };
 
 
+  nix.settings.pure-eval = false;# to allow for the hostname to not be tracked by git - /etc/nextcloud-hostname.txt is secret
   #nextcloud config
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud33;
-    hostName = import ./nextcloud-hostname.nix; #ignored by git - should contain the url in quotation marks
+    hostName = import ./nextcloud-hostname.nix;
     datadir = "/var/lib/nextcloud/data";
     #home = "/var/lib/nextcloud";
     config = {
