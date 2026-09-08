@@ -131,6 +131,7 @@
     xclip
     git
     git-lfs
+    git-filter-repo
     hyfetch
     ranger
     xlsfonts
