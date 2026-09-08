@@ -100,5 +100,13 @@
     }
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = (with pkgs; [
+    blender
+    prusa-slicer
+    kicad
+    obsidian
+  ]);
 }
 
