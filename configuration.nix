@@ -133,6 +133,7 @@
     git-lfs
     git-filter-repo
     git-crypt
+    openssl
     hyfetch
     ranger
     xlsfonts
@@ -153,6 +154,7 @@
     mpg123
     yt-dlp
     python3
+    android-tools
   ]) ++ [
     insect
     ];
@@ -180,7 +182,6 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
