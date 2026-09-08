@@ -132,6 +132,7 @@
     git
     git-lfs
     git-filter-repo
+    git-crypt
     hyfetch
     ranger
     xlsfonts
