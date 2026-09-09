@@ -37,7 +37,7 @@ let
       gap_x = 400,
       gap_y = 1,
 
-      minimum_width = 100,
+      minimum_width = 120,
       minimum_height = 20,
 
       own_window = true,
