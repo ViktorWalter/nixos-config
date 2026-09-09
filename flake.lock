@@ -114,7 +114,23 @@
         "type": "github"
       }
     },
-    "my-script-repo": {
+    "klaxalk-scripts-repo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1757785071,
+        "narHash": "sha256-+NQWpIF307YrSnpoUEz4iWLB6JqfZTuFtu2A/raKVU0=",
+        "owner": "klaxalk",
+        "repo": "linux-setup",
+        "rev": "fc9d2a9bd459f20d4d082caa6131816352d86a0b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "klaxalk",
+        "repo": "linux-setup",
+        "type": "github"
+      }
+    },
+    "my-scripts-repo": {
       "flake": false,
       "locked": {
         "lastModified": 1777038005,
@@ -182,7 +198,8 @@
         "athame-flake": "athame-flake",
         "home-manager": "home-manager",
         "insect-flake": "insect-flake",
-        "my-script-repo": "my-script-repo",
+        "klaxalk-scripts-repo": "klaxalk-scripts-repo",
+        "my-scripts-repo": "my-scripts-repo",
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs_2"
       }
