@@ -26,16 +26,38 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    my-script-repo = {
+      url = "github:ViktorWalter/scripts_and_utils";
+      flake = false;
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, nix-flatpak, ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, nix-flatpak, my-script-repo, ... }:
     let
  	    system = "x86_64-linux";
+
+      # my-script-repo = nixpkgs.legacyPackages.${system}.fetchFromGitHub {
+      #   owner = "ViktorWalter";
+      #   repo = "scripts_and_utils";
+      #   rev = "master";
+      #   hash = "sha256-vRoea6D8Wf7zxK2/w4YZxpm1PyNAXSVr2tDND/5jMP0=";
+      # };
+      scripts-package = nixpkgs.legacyPackages.${system}.runCommand "my-scripts" {} ''
+        mkdir -p $out/bin
+
+        find ${my-script-repo}/scripts -type f -executable \
+          -exec sh -c '
+            for script do
+              ln -s "$script" "$out/bin/$(basename "$script")"
+            done
+          ' _ {} +
+      '';
 
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake insect-flake nix-flatpak; };
+          specialArgs = { inherit hostName athame-flake insect-flake nix-flatpak scripts-package; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak

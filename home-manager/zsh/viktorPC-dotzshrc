@@ -11,7 +11,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # TERM=xterm-256color
 
-alias cdphone='. ~/localpath/cdphone'
+#alias cdphone='. ~/localpath/cdphone'
 
 
 export PATH=$PATH:/home/viktor/localpath/

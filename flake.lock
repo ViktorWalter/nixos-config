@@ -114,6 +114,22 @@
         "type": "github"
       }
     },
+    "my-script-repo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777038005,
+        "narHash": "sha256-ydfXpV64od3/2vHwtdJdqzVFmq4PD5O36GVuKTsOUOY=",
+        "owner": "ViktorWalter",
+        "repo": "scripts_and_utils",
+        "rev": "a5364c8648b9b9d909740631614022f28d05c6d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ViktorWalter",
+        "repo": "scripts_and_utils",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1783368811,
@@ -166,6 +182,7 @@
         "athame-flake": "athame-flake",
         "home-manager": "home-manager",
         "insect-flake": "insect-flake",
+        "my-script-repo": "my-script-repo",
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs_2"
       }
