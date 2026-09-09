@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, athame-flake, insect-flake, scripts-package, ... }:
+{ config, pkgs, athame-flake, insect-flake, my-scripts-package, klaxalk-scripts-package,... }:
   let
     athameZsh = athame-flake.defaultPackage.${pkgs.system};
     insect = insect-flake.packages.${pkgs.system}.default;
@@ -174,7 +174,8 @@
     feh
   ]) ++ [
     insect
-    scripts-package
+    my-scripts-package
+    klaxalk-scripts-package
     ];
 
   services.mullvad-vpn.enable = true;

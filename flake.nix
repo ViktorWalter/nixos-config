@@ -26,38 +26,50 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    my-script-repo = {
+    my-scripts-repo = {
       url = "github:ViktorWalter/scripts_and_utils";
+      flake = false;
+    };
+    
+    klaxalk-scripts-repo = {
+      url = "github:klaxalk/linux-setup";
       flake = false;
     };
 
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, nix-flatpak, my-script-repo, ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, insect-flake, nix-flatpak, my-scripts-repo, klaxalk-scripts-repo, ... }:
     let
  	    system = "x86_64-linux";
 
-      # my-script-repo = nixpkgs.legacyPackages.${system}.fetchFromGitHub {
-      #   owner = "ViktorWalter";
-      #   repo = "scripts_and_utils";
-      #   rev = "master";
-      #   hash = "sha256-vRoea6D8Wf7zxK2/w4YZxpm1PyNAXSVr2tDND/5jMP0=";
-      # };
-      scripts-package = nixpkgs.legacyPackages.${system}.runCommand "my-scripts" {} ''
+      my-scripts-package = nixpkgs.legacyPackages.${system}.runCommand "my-scripts" {} ''
         mkdir -p $out/bin
 
-        find ${my-script-repo}/scripts -type f -executable \
+        find ${my-scripts-repo}/scripts -type f -executable \
           -exec sh -c '
             for script do
               ln -s "$script" "$out/bin/$(basename "$script")"
             done
           ' _ {} +
       '';
+      klaxalk-scripts-package = nixpkgs.legacyPackages.${system}.runCommand "klaxalk-scripts" {} ''
+        mkdir -p $out/bin
+
+        find ${klaxalk-scripts-repo}/scripts -type f -executable \
+          -exec sh -c '
+            for script do
+              ln -s "$script" "$out/bin/$(basename "$script")"
+            done
+          ' _ {} +
+          # basic MRS shell additions too
+          ln -s ${klaxalk-scripts-repo}/appconfig/shell/commons.sh_git \
+          $out/bin/mrs_commons.sh
+      '';
 
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake insect-flake nix-flatpak scripts-package; };
+          specialArgs = { inherit hostName athame-flake insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
@@ -75,6 +87,7 @@
             ({ pkgs, ... }: {
              systemd.tmpfiles.rules = [
              "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
+             "L+ /usr/bin/perl - - - - ${(pkgs.perl.withPackages (ps: [ ps.Git ]))}/bin/perl"
              ];
              })
 
