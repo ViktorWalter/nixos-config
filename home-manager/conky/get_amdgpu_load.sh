@@ -1,2 +1,3 @@
 #!/bin/bash
-sudo cat /sys/kernel/debug/dri/0/amdgpu_pm_info | grep 'GPU Load' | cut -f 3 -d" "
+cat /sys/class/drm/card0/device/gpu_busy_percent
+
