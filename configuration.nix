@@ -122,6 +122,9 @@
 
   programs.firefox.enable = true;
   programs.dconf.enable = true;
+  programs.dconf.profiles.user.databases = [{
+    settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+  }];
   
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).

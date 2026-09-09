@@ -31,6 +31,7 @@
 
       # shared clipboard
       "Shift-Control-V" = "perl:clipboard:paste";
+      "Shift-Control-C" = "perl:clipboard:copy";
 
       # fix CTRL+SHIFT+P
       "Shift-Control-P" = "\\033[24;5~";
@@ -53,6 +54,15 @@
     # Each key is automatically written out as "URxvt.<key>".
     extraConfig = {
       "perl-ext-common" = "default,clipboard";
+
+      # shared clipboard
+      # copyCommand  = "xclip -i -selection clipboard";
+      # pasteCommand = "xclip -o -selection clipboard";
+
+      #the following is the difference that fixed it for nixpkgs' urxvt package - for some reason it differs from other examples:
+      "clipboard.copycmd"  = "xclip -i -selection clipboard";
+      "clipboard.pastecmd" = "xclip -o -selection clipboard";
+
 
       background = "rgba:0000/0000/0000/cccc";
       foreground = "#00bffa";
