@@ -109,7 +109,7 @@ fi
 typeset -A menu
 
 # Use a custom lock script
-IMGSCRIPT="~/.i3/lock_graphic.sh"
+IMGSCRIPT="~/.i3/lockscreen/lock_graphic.sh"
 LOCKSCRIPT="sleep 0.5 && ${IMGSCRIPT} && i3lock -de -i /tmp/s.png"
 
 # Menu with keys/commands

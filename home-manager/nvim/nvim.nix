@@ -131,7 +131,7 @@ in
         "let g:airline#extensions#ycm#enabled = 1
 
         " make vim and ROS friends
-        Plug 'klaxalk/vim-ros'
+        "Plug 'klaxalk/vim-ros'
 
         " airline extension for tmux
         " it colors the tmuxes airline in same colors as in vim
