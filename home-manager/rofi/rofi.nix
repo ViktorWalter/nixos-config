@@ -7,7 +7,7 @@
     extraConfig = {
       show-icons = true;
       "drun-icon-theme" = "Papirus-Dark";
-      "run-command" = "i3 exec {cmd}";
+      "run-command" = "i3-msg exec \'{cmd}\'";
     };
 
     # Reconstructed color scheme -- see the big comment at the top of this

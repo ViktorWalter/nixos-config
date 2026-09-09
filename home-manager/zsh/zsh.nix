@@ -22,7 +22,7 @@ in
       ".." = "cd ..";
       ":q" = "exit";
       #neofetch = "hyfetch";
-      update = "sudo nixos-rebuild switch";
+      update = "sudo nixos-rebuild switch && notify-send -i nix-snowflake -e \"Rebuilding Finished\!\" || notify-send -i dialog-error -e \"Rebuilding Failed\!\"";
       cn = "cd /etc/nixos";
     };
 
