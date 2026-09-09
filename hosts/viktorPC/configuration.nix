@@ -68,6 +68,9 @@
       sha256 = "0lghiiiphbkqgiprqirxifldvix0j4k04jh1z9f911shrzjgqq4s"; #get with nix-refetch-url
     }
   ];
+  #to allow threema to store keys and allow persistant login
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true; # or whatever your login PAM service is called (e.g. "sddm", "gdm", "greetd")
 
   nixpkgs.config.allowUnfree = true;
 
@@ -77,6 +80,7 @@
     kicad
     obsidian
     steam
+    btop-rocm
   ]);
 }
 

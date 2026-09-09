@@ -60,8 +60,10 @@
       # pasteCommand = "xclip -o -selection clipboard";
 
       #the following is the difference that fixed it for nixpkgs' urxvt package - for some reason it differs from other examples:
-      "clipboard.copycmd"  = "xclip -i -selection clipboard";
-      "clipboard.pastecmd" = "xclip -o -selection clipboard";
+      # "clipboard.copycmd"  = "xclip -i -selection clipboard";
+      # "clipboard.pastecmd" = "xclip -o -selection clipboard";
+
+      #defaulting to xsel
 
 
       background = "rgba:0000/0000/0000/cccc";
