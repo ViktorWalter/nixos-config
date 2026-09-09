@@ -185,7 +185,7 @@ in
       set $transparent              #000000dd
       set $text_color               #005faf
 
-      exec_always --no-startup-id ~/.i3/setWallpaper.sh
+      exec_always --no-startup-id ~/.i3/wallpaper/setWallpaper.sh
 
       for_window [class="^.*"] border pixel 2
       for_window [class="conky"] border none

@@ -171,6 +171,7 @@
     shutter
     scrot
     imagemagick
+    feh
   ]) ++ [
     insect
     ];
