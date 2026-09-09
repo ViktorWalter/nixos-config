@@ -137,18 +137,18 @@ function! SetColors()
   colorscheme jellybeans " JELLYBEANS COLOR_SCHEME ACTIVE 
   hi NonText guibg=NONE ctermbg=NONE
 
-  hi TabLineSel ctermbg=45
-  hi TabLineFill ctermbg=45
+  hi TabLineSel ctermbg=45 guibg=#00d7ff
+  hi TabLineFill ctermbg=45 guibg=#00d7ff
   " hi TabLine ctermbg=0 ctermfg=45
   " hi Title ctermbg=45
 
 
-  hi StartifyHeader ctermfg=39 cterm=bold
-  hi StartifyFooter ctermfg=39 cterm=bold
-  hi Normal ctermfg=39
+  hi StartifyHeader guifg=#61afef ctermfg=39 cterm=bold gui=bold
+  hi StartifyFooter guifg=#61afef ctermfg=39 cterm=bold gui=bold
+  hi Normal guifg=#61afef ctermfg=39
 
-  hi TabLine ctermbg=0 ctermfg=129
-  hi Title ctermbg=129
+  hi TabLine ctermbg=0 guibg=#000000 ctermfg=129 guifg=#af00ff 
+  hi Title guibg=#af00ff ctermbg=129
 
 
   " hi StartifyHeader ctermfg=129 cterm=bold
@@ -157,7 +157,7 @@ function! SetColors()
   
   hi Normal guibg=NONE ctermbg=NONE
   hi NonText guibg=NONE ctermbg=NONE
-  hi ColorColumn ctermbg=100
+  hi ColorColumn ctermbg=100 guibg=#878700
   call matchadd('ColorColumn', '\%81v',100)
 endfunction
 

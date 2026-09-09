@@ -189,6 +189,7 @@ in
 
       for_window [class="^.*"] border pixel 2
       for_window [class="conky"] border none
+      for_window [class="Xfce4-notifyd"] border none
 
       # window colors
       #                       border                    background            text                  indicator
@@ -210,7 +211,6 @@ in
 
       for_window [class="firefox"] move to workspace number 5
 
-      for_window [class="xfce4-notifyd"] border none
 
 
       # gaps
