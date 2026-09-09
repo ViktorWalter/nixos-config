@@ -4,6 +4,7 @@
     ./home-manager/zsh/zsh.nix
     ./home-manager/nvim/nvim.nix
     ./home-manager/i3/i3.nix
+    ./home-manager/conky/conky.nix
     ./home-manager/theme/theme.nix
     ./home-manager/urxvt/urxvt.nix
     ./home-manager/rofi/rofi.nix

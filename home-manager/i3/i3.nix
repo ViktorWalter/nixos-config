@@ -210,6 +210,8 @@ in
 
       for_window [class="firefox"] move to workspace number 5
 
+      for_window [class="xfce4-notifyd"] border none
+
 
       # gaps
       gaps inner 5
