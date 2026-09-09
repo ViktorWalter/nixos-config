@@ -76,6 +76,7 @@
     prusa-slicer
     kicad
     obsidian
+    steam
   ]);
 }
 
