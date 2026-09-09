@@ -132,6 +132,7 @@
   environment.systemPackages = (with pkgs; [
     wget
     xclip
+    xsel
     git
     git-lfs
     git-filter-repo
@@ -153,14 +154,26 @@
     eog
     vimiv-qt
     zathura
+    texliveFull
     mpv
     mpg123
     yt-dlp
     python3
     android-tools
+    teams-for-linux
+    docker
+    wesnoth
+    pdfpc
+    ffmpeg-full
+    inetutils
+    arandr
+    baobab
+    shutter
   ]) ++ [
     insect
     ];
+
+  services.mullvad-vpn.enable = true;
 
 
   # ++ (lib.optionals (config.networking.hostName == "viktorPC") [ pkgs.picom ]);

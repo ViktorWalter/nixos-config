@@ -21,7 +21,10 @@ in
     vimAlias = true;
     defaultEditor = true;
     withPython3 = true;
-    extraPython3Packages = (ps: with ps; [ pynvim ]);
+    extraPython3Packages = (ps: with ps; [
+      pynvim
+      libclang
+    ]);
     # No nix-managed plugins -- vim-plug (invoked from extraConfig below)
     # owns the entire plugin set, as requested.
     plugins = [ ];
@@ -63,7 +66,7 @@ in
         Plug 'tpope/vim-fugitive'
 
         " showing git changes in the file
-        Plug 'airblade/vim-gitgutter'
+        Plug 'airblade/vim-gitgutter', { 'branch': 'main'}
 
         " resolving conflicts in git the better way
         Plug 'christoomey/vim-conflicted'
@@ -120,20 +123,6 @@ in
         " currently mapped to F8
         Plug 'majutsushi/tagbar', { 'commit': 'a0f51bd' }
 
-        if has('nvim')
-          Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-          Plug 'kiddos/deoplete-cpp'
-          Plug 'deoplete-plugins/deoplete-tag'
-
-          " Plug 'dense-analysis/ale'
-          Plug 'neomake/neomake'
-        else
-          Plug 'Shougo/deoplete.nvim'
-          Plug 'roxma/nvim-yarp'
-          Plug 'roxma/vim-hug-neovim-rpc'
-        endif
-        let g:deoplete#enable_at_startup = 1
-
         " youcompleteme
         " automatic code completion for C++ and more
         " Plug 'ycm-core/YouCompleteMe', { 'commit': '380a7f6', 'do': './install.py --clangd-completer' }
@@ -168,7 +157,7 @@ in
         Plug 'christoomey/vim-tmux-navigator'
 
         " should make ultisnips work together with youcompletme
-        Plug 'ervandew/supertab'
+        Plug 'ervandew/supertab', { 'branch': 'main'}
 
         " easier manipulation with quickfix window
         " [q and ]q to move through the quickfix list
@@ -672,6 +661,8 @@ in
       if !empty(glob("~/.my.vimrc"))
         source ~/.my.vimrc
       endif
+
+
     '';
   };
 

@@ -23,6 +23,7 @@ in
       ":q" = "exit";
       neofetch = "hyfetch";
       update = "sudo nixos-rebuild switch";
+      cn = "cd /etc/nixos";
     };
 
     oh-my-zsh = { # "ohMyZsh" without Home Manager
