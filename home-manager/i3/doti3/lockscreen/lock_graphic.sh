@@ -6,7 +6,7 @@ rm /tmp/s.png
 rm /tmp/s.jpg
 
 # IFS=, #so that sub-command sequences in variables get parsed
-logo=(\( ~/.i3/ohhellno_shadow.png -resize 700x700 -geometry -400+0 \))
+logo=(\( ~/.i3/lockscreen/ohhellno_shadow.png -resize 700x700 -geometry -400+0 \))
 tinttcolor=(-fill "#00bffa")
 case $rand in
   0)

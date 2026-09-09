@@ -169,6 +169,8 @@
     arandr
     baobab
     shutter
+    scrot
+    imagemagick
   ]) ++ [
     insect
     ];
