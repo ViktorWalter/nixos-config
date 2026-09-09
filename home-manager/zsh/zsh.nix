@@ -21,7 +21,7 @@ in
       vimdiff = "nvim -d";
       ".." = "cd ..";
       ":q" = "exit";
-      neofetch = "hyfetch";
+      #neofetch = "hyfetch";
       update = "sudo nixos-rebuild switch";
       cn = "cd /etc/nixos";
     };

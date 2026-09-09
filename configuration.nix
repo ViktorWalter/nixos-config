@@ -138,10 +138,8 @@
     git-filter-repo
     git-crypt
     openssl
-    hyfetch
     ranger
     xlsfonts
-    hyfetch
     htop-vim
     thunar
     pavucontrol

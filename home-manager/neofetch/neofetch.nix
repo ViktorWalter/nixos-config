@@ -1,22 +1,35 @@
-{ hostName, athame-flake, config, pkgs, lib, ... }:
+{ hostName, config, pkgs, lib, ... }:
 {
-  programs.hyfetch = { #maintained neofetch fork
+  programs.fastfetch = {
     enable = true;
+
     settings = {
-      preset = "leather";
-      mode = "rgb";
-      auto_detect_light_dark = false;
-      light_dark = "dark";
-      lightness = 0.56;
-      color_align = {
-          mode = "custom";
-          custom_colors = {
-              "1" = 1;
-              "2" = 2;
-          };
+      logo = {
+        type = "auto";
       };
-      pride_month_disable = true; #some animation
-      backend = "neofetch";
+
+      modules = [
+        "title"
+        "separator"
+        "os"
+        "host"
+        "kernel"
+        "uptime"
+        "shell"
+        "display"
+        "de"
+        "wm"
+        "terminal"
+        "cpu"
+        "gpu"
+        "memory"
+        "disk"
+        "packages"
+        "break"
+        "colors"
+      ];
     };
   };
+
+  home.shellAliases.neofetch = "fastfetch";
 }
