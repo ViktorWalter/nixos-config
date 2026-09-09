@@ -171,6 +171,7 @@
     imagemagick
     feh
     libnotify
+    killall
   ]) ++ [
     insect
     my-scripts-package
