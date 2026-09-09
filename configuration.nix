@@ -170,6 +170,7 @@
     scrot
     imagemagick
     feh
+    libnotify
   ]) ++ [
     insect
     my-scripts-package
