@@ -10,8 +10,6 @@
       ./nextcloud.nix
     ];
 
-  networking.hostName = "viktorPC";
-
   boot.loader.grub.enable = true;
   boot.loader.grub.efiSupport = false;
   boot.loader.grub.device = "/dev/nvme0n1";
@@ -92,6 +90,7 @@
     obsidian
     btop-rocm
     davinci-resolve
+    amdgpu_top
   ]);
 
 }
