@@ -145,6 +145,7 @@
   environment.systemPackages = (with pkgs; [
     xauth
     wget
+    gnumake
     xclip
     xsel
     git
@@ -187,6 +188,8 @@
     libnotify
     killall
     fatrace
+    zip
+    unzip
   ]) ++ [
     insect
     my-scripts-package
