@@ -61,6 +61,10 @@
   };
 
 
+  #GPU
+  hardware.graphics.enable = true;
+  hardware.amdgpu.opencl.enable = true;
+
   #threema
   services.flatpak.packages = [
     {
@@ -87,6 +91,8 @@
     kicad
     obsidian
     btop-rocm
+    davinci-resolve
   ]);
+
 }
 
