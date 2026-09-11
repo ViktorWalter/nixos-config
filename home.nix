@@ -22,5 +22,6 @@
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix
   ./home-manager/directories/directories.nix
+  ./home-manager/kodi/kodi.nix
 ];
 }
