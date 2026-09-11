@@ -27,7 +27,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     my-scripts-repo = {
-      url = "github:ViktorWalter/scripts_and_utils";
+      url = "github:ViktorWalter/scripts_and_utils?ref=master";
       flake = false;
     };
     

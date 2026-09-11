@@ -4,11 +4,12 @@ let
   # subtract the store-copy prefix from this file's path, leaving e.g. "/hosts/myhost"
   relative = lib.removePrefix (toString self) (toString ./.);
   here = realRoot + relative;
+  system = pkgs.stdenv.hostPlatform.system;
 in
 {
   programs.zsh = {
     enable = true;
-    package = athame-flake.defaultPackage.${pkgs.system};
+    package = athame-flake.defaultPackage.${system};
 
     autosuggestion.enable = false;
     syntaxHighlighting.enable = true;

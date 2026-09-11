@@ -4,8 +4,9 @@
 
 { config, pkgs, athame-flake, insect-flake, my-scripts-package, klaxalk-scripts-package,... }:
   let
-    athameZsh = athame-flake.defaultPackage.${pkgs.system};
-    insect = insect-flake.packages.${pkgs.system}.default;
+    system = pkgs.stdenv.hostPlatform.system;
+    athameZsh = athame-flake.defaultPackage.${system};
+    insect = insect-flake.packages.${system}.default;
   in
 {
 
@@ -70,10 +71,14 @@
       PasswordAuthentication = false;
       PermitRootLogin = "no";
       AllowUsers = [ "viktor" ];
+      KbdInteractiveAuthentication = false;
       MaxAuthTries = 3;
       PerSourcePenalties = "crash:3600s authfail:3600s max:86400s";
     };
   };
+  users.users.viktor.openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDVqzZTQZj4xpYQeqah6QrXDqgvSBGYdDi3o7ahqzfOi82tN1u/3qsR61q9AEg26A6hPRiiZWl6x4UUInTob7P9qEqatUU5r6AWTu0ky/YYYU0348u1iK3RK1fVtr4/Qu9ZMuI9tRJHUYAoSu2QdAlq7BI79QaIdoqOPVlBnppSvaNdx73lWI2vsxQDY39DEkA1rSmhwNLwjYybTr9bHsVjUUJWy26xlrJ79rLhbMC/QEgSbnXOsG7zq2EI0Y//8PgHkTb6zVEqIDTZSRds1P2XA9oAFSwYPj1gMPt1iTgxoonMob1yRt+1P1ofhdNAy2Gl6GIUErS2H6pI3i+0O/D21s70hP9D+K9NILXXBsr36ssUauvNHeojkgKz6C5zXDvr1jRAeHdG8xxeje0s5Dr4+Q6xGPxhN8IFOjZJBtVHFMV0Dr4apOggpOG/uRTXhWBDQeUY4OYi94+lqeRQykno6ABZ8j2AITa1CXPz/DEuMwZuWwogq+lBfzv9snEqwCs= Null"
+    ];
 
   fonts.fontconfig.allowBitmaps = true;
   fonts.fontconfig.useEmbeddedBitmaps = true;
@@ -92,6 +97,7 @@
   };
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # necessary for minimal WMs like i3
+  xdg.portal.config.common.default = "*";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -111,7 +117,6 @@
 
   home-manager.useUserPackages = true;
   home-manager.users.viktor = { pkgs, ... }: {
-    home.packages = [ pkgs.atool pkgs.httpie ];
     #programs.bash.enable = true;
     # programs.zsh.enable = true;
 
@@ -172,6 +177,7 @@
     feh
     libnotify
     killall
+    fatrace
   ]) ++ [
     insect
     my-scripts-package
