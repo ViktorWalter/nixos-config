@@ -49,8 +49,8 @@
   '';
 
   home.packages = [
-    pkgs.xorg.setxkbmap
-    pkgs.xorg.xkbcomp
+    pkgs.setxkbmap
+    pkgs.xkbcomp
   ];
 
 }

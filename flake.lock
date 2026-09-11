@@ -142,6 +142,7 @@
       },
       "original": {
         "owner": "ViktorWalter",
+        "ref": "master",
         "repo": "scripts_and_utils",
         "type": "github"
       }
