@@ -20,7 +20,7 @@ for d in /home/viktor/localpath/scripts/*/; do;
   export PATH=$PATH:${d}
 done
 
-source ~/git/linux-setup/appconfig/shell/commons.sh_git
+source mrs_commons.sh
 
 alias vpn=mullvad
 alias sup='xdotool getactivewindow set_window --classname "mail"; RUBYOPT="-W0" sup'
@@ -72,7 +72,7 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 export PATH="$PATH:/opt/rocm/bin"
 
 # if [ -e /home/viktor/.nix-profile/etc/profile.d/nix.sh ]; then . /home/viktor/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
- export DISPLAY=:0
+# export DISPLAY=:0
 
 export ROS_DOMAIN=66
 
