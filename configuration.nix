@@ -9,6 +9,7 @@
     insect = insect-flake.packages.${system}.default;
   in
 {
+  networking.hostName = "${hostName}";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
