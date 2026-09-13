@@ -41,6 +41,9 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
 
+  environment.systemPackages = (with pkgs; [
+    geteduroam
+  ]);
 
 }
 
