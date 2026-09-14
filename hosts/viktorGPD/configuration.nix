@@ -41,9 +41,13 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
 
+  #services.upower.enable = true;
   environment.systemPackages = (with pkgs; [
     geteduroam
+    tlp
+    xfce4-power-manager
   ]);
 
+  boot.kernelPackages = pkgs.linuxPackages_6_12;
 }
 

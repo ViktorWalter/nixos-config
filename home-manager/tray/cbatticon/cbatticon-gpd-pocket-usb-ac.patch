@@ -1,0 +1,21 @@
+diff --git a/cbatticon.c b/cbatticon.c
+index 47de04f..6c6c79d 100644
+--- a/cbatticon.c
++++ b/cbatticon.c
+@@ -403,7 +403,15 @@ static void get_power_supplies (void)
+ 
+                 /* process AC */
+ 
+-                if (g_str_has_prefix (sysattr_value, "Mains") == TRUE &&
++                /* Some devices (e.g. GPD Pocket) expose their charger as a  */
++                /* "USB" type power supply (bq24190-charger, tcpm-source-*)  */
++                /* instead of "Mains", with the actual battery status stuck  */
++                /* on "Unknown" because the fuel gauge driver can't see the  */
++                /* charger. Treat online USB supplies as AC too so the       */
++                /* existing unknown-status/ac_online workaround below fires. */
++
++                if ((g_str_has_prefix (sysattr_value, "Mains") == TRUE ||
++                     g_str_has_prefix (sysattr_value, "USB") == TRUE) &&
+                     get_ac_online (path, NULL) == TRUE) {
+                     if (configuration.list_power_supplies == TRUE) {
+                         gchar *power_supply_id = g_path_get_basename (path);

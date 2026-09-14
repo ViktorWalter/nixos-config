@@ -1,7 +1,14 @@
 { hostName, pkgs, lib, ... }:
 let
-  cbatticonHosts = [ "viktorGPD" "viktorTP" ];
-  enableCbatticon = builtins.elem hostName cbatticonHosts;
+  battindicatorHosts = [ "viktorGPD" "viktorTP" ];
+  enableBattindicator = builtins.elem hostName battindicatorHosts;
+  cbatticon-gpd-pocket = pkgs.cbatticon.overrideAttrs (old: {
+    pname = "cbatticon-gpd-pocket";
+    patchPhase = ''
+      ${old.patchPhase or ""}
+      patch -p1 < ${./cbatticon/cbatticon-gpd-pocket-usb-ac.patch}
+    '';
+  });
 in
 {
 
@@ -14,12 +21,19 @@ in
     ];
   };
 
-  services.cbatticon = {
-    enable = enableCbatticon;
-  # optional extras, e.g.:
-  # iconType = "symbolic";
-  # lowLevelPercent = 20;
-  # criticalLevelPercent = 5;
-  };
 
+home.packages = [ cbatticon-gpd-pocket ];
+
+  systemd.user.services.cbatticon = {
+    Unit = {
+      Description = "Battery tray icon (patched for GPD Pocket's USB-type charger)";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${cbatticon-gpd-pocket}/bin/cbatticon -i symbolic -u 5";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 }
