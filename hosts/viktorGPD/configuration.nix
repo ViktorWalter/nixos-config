@@ -45,9 +45,29 @@
   environment.systemPackages = (with pkgs; [
     geteduroam
     tlp
-    xfce4-power-manager
+    libgpiod
+    python313Packages.gpiod
   ]);
 
   boot.kernelPackages = pkgs.linuxPackages_6_12;
+
+  boot.kernelModules = [ "coretemp" ];
+
+  # gpd_pocket_fan stays loaded but harmless/deferred - fine to leave or blacklist,
+  # your call. Blacklisting avoids the noisy "deferred probe pending" dmesg line:
+  boot.blacklistedKernelModules = [ "gpd_pocket_fan" ];
+
+  environment.etc."gpd-fand.py".source = ./gpd-fand.py;
+
+  systemd.services.gpd-fand = {
+    description = "GPD Pocket fan control daemon";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.python3.withPackages (ps: [ ps.gpiod ])}/bin/python3 /etc/gpd-fand.py";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+  };
 }
 

@@ -191,6 +191,7 @@
     fatrace
     zip
     unzip
+    lm_sensors
   ]) ++ [
     insect
     my-scripts-package
