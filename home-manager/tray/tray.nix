@@ -1,14 +1,17 @@
 { hostName, pkgs, lib, ... }:
 let
-  battindicatorHosts = [ "viktorGPD" "viktorTP" ];
-  enableBattindicator = builtins.elem hostName battindicatorHosts;
-  cbatticon-gpd-pocket = pkgs.cbatticon.overrideAttrs (old: {
-    pname = "cbatticon-gpd-pocket";
-    patchPhase = ''
-      ${old.patchPhase or ""}
-      patch -p1 < ${./cbatticon/cbatticon-gpd-pocket-usb-ac.patch}
-    '';
-  });
+  # "none"    -> no battery tray icon at all (e.g. a desktop with no battery)
+  # "standard"-> stock cbatticon
+  # "patched" -> cbatticon with the GPD Pocket USB-charger AC-detection fix
+  cbatticonVariant = {
+    "viktorGPD" = "patched";
+    "viktorPC" = "none";
+  }.${hostName} or "standard";
+
+  cbatticonPackage =
+    if cbatticonVariant == "patched" then import ./cbatticon/cbatticon-gpd-pocket.nix { inherit pkgs; }
+    else if cbatticonVariant == "standard" then pkgs.cbatticon
+    else null;
 in
 {
 
@@ -22,16 +25,18 @@ in
   };
 
 
-home.packages = [ cbatticon-gpd-pocket ];
+#battery indicator
+home.packages = lib.optional (cbatticonPackage != null) cbatticonPackage;
 
-  systemd.user.services.cbatticon = {
+  systemd.user.services.cbatticon = lib.mkIf (cbatticonPackage != null) {
     Unit = {
-      Description = "Battery tray icon (patched for GPD Pocket's USB-type charger)";
+      Description = "Battery tray icon"
+        + lib.optionalString (cbatticonVariant == "patched") " (patched for GPD Pocket's USB-type charger)";
       After = [ "graphical-session-pre.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart = "${cbatticon-gpd-pocket}/bin/cbatticon -i symbolic -u 5";
+      ExecStart = "${cbatticonPackage}/bin/cbatticon -i standard -u 5";
       Restart = "on-failure";
     };
     Install.WantedBy = [ "graphical-session.target" ];
