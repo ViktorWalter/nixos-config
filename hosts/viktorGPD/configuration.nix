@@ -9,29 +9,31 @@
       ./hardware-configuration.nix
     ];
 
-  nixpkgs.overlays = [
-    (final: prev: {
-     grub2 = prev.grub2.overrideAttrs (old: {
-         pname = "grub-rotated";
-         version = "unstable-2024-06-18";
-         src = final.fetchFromGitHub {
-         owner = "kbader94";
-         repo = "grub";
-         rev = "main"; # pin to a real commit hash
-         hash = ""; # nix will report the correct hash on first build
-         };
-         patches = [ ];
-         });
-     })
-  ];
-
-  boot.loader.grub.extraConfig = ''
-    set rotation=90
-  '';
-
+  # nixpkgs.overlays = [
+  #   (final: prev: {
+  #    grub2 = prev.grub2.overrideAttrs (old: {
+  #        pname = "grub-rotated";
+  #        version = "unstable-2024-06-18";
+  #        src = final.fetchFromGitHub {
+  #        owner = "kbader94";
+  #        repo = "grub";
+  #        rev = "main"; # pin to a real commit hash
+  #        hash = ""; # nix will report the correct hash on first build
+  #        };
+  #        patches = [ ];
+  #        });
+  #    })
+  # ];
+  #
+  # boot.loader.grub.extraConfig = ''
+  #   set rotation=90
+  # '';
+  #
 
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DSI-1 --rotate right
+    ${pkgs.xinput}/bin/xinput set-prop "pointer:Goodix Capacitive TouchScreen" \
+      "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
   '';
 
   # Use the systemd-boot EFI boot loader.
@@ -47,6 +49,7 @@
     tlp
     libgpiod
     python313Packages.gpiod
+    brightnessctl 
   ]);
 
   boot.kernelPackages = pkgs.linuxPackages_6_12;
@@ -69,5 +72,8 @@
       RestartSec = 2;
     };
   };
+
+  services.udev.packages = [ pkgs.brightnessctl ];
+  users.users.viktor.extraGroups = [ "video" ];
 }
 
