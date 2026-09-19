@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, hostName, ... }:
 
 let
   conky124 = pkgs.conky.overrideAttrs (old: rec {
@@ -44,7 +44,7 @@ let
       own_window_type = 'normal',
       own_window_class = 'conky',
       own_window_transparent = false,
-      own_window_hints = 'undecorated,below,skip_taskbar,skip_pager',
+      own_window_hints = 'undecorated,skip_taskbar,skip_pager',
 
       update_interval = 1.0,
 
@@ -64,7 +64,7 @@ let
  conkyPositionScript = pkgs.writeShellScript "conky-position" ''
     set -eu
 
-    offset=20
+    offset=22
 
     while true; do
       # Find the primary monitor:
@@ -86,14 +86,18 @@ let
         )"
 
         if [ -n "$window" ]; then
+        # Make sure i3 considers Conky floating.
+        ${pkgs.i3}/bin/i3-msg \
+          '[class="conky"] floating enable' >/dev/null
+
           read -r ww wh <<< "$(
             ${pkgs.xdotool}/bin/xdotool getwindowgeometry --shell "$window" |
             ${pkgs.gnugrep}/bin/grep -E '^(WIDTH|HEIGHT)=' |
-            ${pkgs.gnused}/bin/'s/[^0-9 ]//g'
+            ${pkgs.gnused}/bin/sed 's/[^0-9 ]//g' | tr '\n' ' '
           )"
 
-          x=$((mx + (mw - ww) / 2))
-          y=$((my + mh - wh - offset))
+          x=$((mx + (mw) / 2))
+          y=$((my + mh - offset))
 
           ${pkgs.xdotool}/bin/xdotool windowmove "$window" "$x" "$y"
         fi

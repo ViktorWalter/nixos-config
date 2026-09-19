@@ -204,7 +204,7 @@ in
       for_window [class="desktop"] floating enable
 
       for_window [class="conky"] border none
-      for_window [class="conky"] floating enable
+      # for_window [class="conky"] floating enable
       for_window [class="conky"] sticky enable
       for_window [class="conky"] no_focus
       # for_window [class="conky"] move position 840 px 1058
