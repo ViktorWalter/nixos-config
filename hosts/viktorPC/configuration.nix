@@ -63,6 +63,11 @@
   hardware.graphics.enable = true;
   hardware.amdgpu.opencl.enable = true;
 
+  #Screen layout
+  services.xserver.displayManager.setupCommands = ''
+    ${pkgs.xrandr}/bin/xrandr --output DP-3 --right-of HDMI-1
+  '';
+
   #Audio
   hardware.pulseaudio.extraConfig = ''
     set-card-profile alsa_card.pci-0000_03_00.1  output:hdmi-stereo-extra4

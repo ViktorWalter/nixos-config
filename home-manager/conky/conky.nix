@@ -23,7 +23,7 @@ let
 
   conkyConf = ''
     conky.config = {
-      alignment = 'bottom_middle',
+      alignment = 'top_left',
       background = false,
       border_width = 0,
 
@@ -34,8 +34,8 @@ let
       draw_outline = false,
       draw_shades = false,
 
-      gap_x = 400,
-      gap_y = 1,
+      gap_x = 0,
+      gap_y = 0,
 
       minimum_width = 120,
       minimum_height = 20,
@@ -59,6 +59,48 @@ let
 
     conky.text = [[
     ]]
+  '';
+
+ conkyPositionScript = pkgs.writeShellScript "conky-position" ''
+    set -eu
+
+    offset=20
+
+    while true; do
+      # Find the primary monitor:
+      monitor="$(
+        ${pkgs.xorg.xrandr}/bin/xrandr --query |
+        ${pkgs.gnugrep}/bin/grep ' connected primary ' |
+        ${pkgs.gnused}/bin/sed -n \
+          's/.* \([0-9][0-9]*\)x\([0-9][0-9]*\)+\(-\?[0-9][0-9]*\)+\(-\?[0-9][0-9]*\).*/\1 \2 \3 \4/p'
+      )"
+
+      if [ -n "$monitor" ]; then
+        read -r mw mh mx my <<< "$monitor"
+
+        # Find the Conky window.
+        window="$(
+          ${pkgs.xdotool}/bin/xdotool search \
+            --class '^conky$' 2>/dev/null |
+          ${pkgs.coreutils}/bin/head -n1 || true
+        )"
+
+        if [ -n "$window" ]; then
+          read -r ww wh <<< "$(
+            ${pkgs.xdotool}/bin/xdotool getwindowgeometry --shell "$window" |
+            ${pkgs.gnugrep}/bin/grep -E '^(WIDTH|HEIGHT)=' |
+            ${pkgs.gnused}/bin/'s/[^0-9 ]//g'
+          )"
+
+          x=$((mx + (mw - ww) / 2))
+          y=$((my + mh - wh - offset))
+
+          ${pkgs.xdotool}/bin/xdotool windowmove "$window" "$x" "$y"
+        fi
+      fi
+
+      sleep 2
+    done
   '';
 
 in {
@@ -94,6 +136,24 @@ in {
       ExecStart = "${conky124}/bin/conky -c ${conkyConfigDir}/conky.conf";
       Restart = "on-failure";
       RestartSec = 2;
+    };
+
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  systemd.user.services.conky-position = {
+    Unit = {
+      Description = "Position Conky on primary monitor";
+      After = [ "graphical-session.target" "conky.service" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      ExecStart = "${conkyPositionScript}";
+      Restart = "always";
+      RestartSec = 1;
     };
 
     Install = {
