@@ -21,6 +21,8 @@ let
 
   conkyConfigDir = "${config.xdg.configHome}/conky";
 
+  conkyDrawConfig = ./conky_draw_config_${hostName}.lua;
+
   conkyConf = ''
     conky.config = {
       alignment = 'top_left',
@@ -37,14 +39,14 @@ let
       gap_x = 0,
       gap_y = 0,
 
-      minimum_width = 120,
-      minimum_height = 20,
+      minimum_width = 128,
+      minimum_height = 50,
 
       own_window = true,
       own_window_type = 'normal',
       own_window_class = 'conky',
       own_window_transparent = false,
-      own_window_hints = 'undecorated,skip_taskbar,skip_pager',
+      own_window_hints = 'undecorated,under,skip_taskbar,skip_pager',
 
       update_interval = 1.0,
 
@@ -121,7 +123,7 @@ in {
       ./conky_draw.lua;
 
     ".config/conky/conky_draw_config.lua".source =
-      ./conky_draw_config.lua;
+      conkyDrawConfig;
 
     ".local/bin/get_amdgpu_load.sh" = {
       source = ./get_amdgpu_load.sh;
