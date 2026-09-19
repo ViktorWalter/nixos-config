@@ -66,6 +66,7 @@
   #Screen layout
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DP-3 --right-of HDMI-1
+    ${pkgs.xrandr}/bin/xrandr --output HDMI-1 --primary
   '';
 
   #Audio
