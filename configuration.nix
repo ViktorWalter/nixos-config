@@ -219,6 +219,7 @@
     fontconfig
     freetype
     usbutils
+    lm_sensors
     ]) ++ [
     insect
     my-scripts-package
