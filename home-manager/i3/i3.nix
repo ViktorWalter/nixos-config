@@ -28,7 +28,7 @@ in
       exec --no-startup-id blueman-applet
       exec --no-startup-id "sleep 2;  pulseaudio --start"
       exec --no-startup-id "sleep 3; pa-applet"
-      exec --no-startup-id cbatticon
+#      exec --no-startup-id cbatticon
       exec_always  --no-startup-id  ~/.i3/my_autoname_workspaces.py &
       exec_always  --no-startup-id ~/.i3/conky/conky_start
       exec_always  --no-startup-id "unclutter -idle 3"
