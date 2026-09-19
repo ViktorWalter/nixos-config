@@ -30,7 +30,7 @@ in
       exec --no-startup-id "sleep 3; pa-applet"
 #      exec --no-startup-id cbatticon
       exec_always  --no-startup-id  ~/.i3/my_autoname_workspaces.py &
-      exec_always  --no-startup-id ~/.i3/conky/conky_start
+      #exec_always  --no-startup-id ~/.i3/conky/conky_start
       exec_always  --no-startup-id "unclutter -idle 3"
       exec_always  --no-startup-id "sleep 2; ~/.i3/border_control"
 
@@ -188,7 +188,6 @@ in
       exec_always --no-startup-id ~/.i3/wallpaper/setWallpaper.sh
 
       for_window [class="^.*"] border pixel 2
-      for_window [class="conky"] border none
       for_window [class="Xfce4-notifyd"] border none
 
       # window colors
@@ -203,10 +202,13 @@ in
 
       for_window [class="dock"] floating enable
       for_window [class="desktop"] floating enable
+
+      for_window [class="conky"] border none
       for_window [class="conky"] floating enable
       for_window [class="conky"] sticky enable
       for_window [class="conky"] no_focus
-      for_window [class="conky"] move to output primary
+      # for_window [class="conky"] move position 840 px 1058
+      # for_window [class="conky"] move to output primary
 
 
       for_window [class="firefox"] move to workspace number 5
