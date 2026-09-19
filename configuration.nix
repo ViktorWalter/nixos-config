@@ -139,6 +139,27 @@
   programs.dconf.profiles.user.databases = [{
     settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
   }];
+
+  services.pcscd.enable = true;
+
+  ##Libraries needed for appimage-run. More may be added later
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      pcsclite
+        fontconfig
+        freetype
+        libgpg-error
+        libxcb      # core libxcb.so.1 — the AppImage bundles the xcb-* extension libs but not this
+        xcb-util-cursor   # correct name; provides libxcb-cursor.so.0
+        libX11
+        libsm
+        libice
+        zlib
+        libglvnd
+        harfbuzz
+    ];
+  };
   
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -191,7 +212,14 @@
     fatrace
     zip
     unzip
-  ]) ++ [
+    libreoffice
+    appimage-run
+    pcsclite
+    xcb-util-cursor
+    fontconfig
+    freetype
+    usbutils
+    ]) ++ [
     insect
     my-scripts-package
     klaxalk-scripts-package
