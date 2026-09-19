@@ -63,6 +63,11 @@
   hardware.graphics.enable = true;
   hardware.amdgpu.opencl.enable = true;
 
+  #Audio
+  hardware.pulseaudio.extraConfig = ''
+    set-card-profile alsa_card.pci-0000_03_00.1  output:hdmi-stereo-extra4
+    '';
+
   #threema
   services.flatpak.packages = [
     {
