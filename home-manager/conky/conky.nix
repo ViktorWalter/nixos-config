@@ -25,7 +25,7 @@ let
 
   conkyConf = ''
     conky.config = {
-      alignment = 'top_left',
+      alignment = 'bottom_middle',
       background = false,
       border_width = 0,
 
@@ -43,7 +43,7 @@ let
       minimum_height = 50,
 
       own_window = true,
-      own_window_type = 'normal',
+      own_window_type = 'utility',
       own_window_class = 'conky',
       own_window_transparent = false,
       own_window_hints = 'undecorated,under,skip_taskbar,skip_pager',

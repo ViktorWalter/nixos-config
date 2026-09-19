@@ -75,10 +75,11 @@
     '';
 
   #threema
+  services.flatpak.update.onActivation = true;
   services.flatpak.packages = [
     {
       flatpakref = "https://releases.threema.ch/flatpak/threema-desktop/ch.threema.threema-desktop.flatpakref";
-      sha256 = "0lghiiiphbkqgiprqirxifldvix0j4k04jh1z9f911shrzjgqq4s"; #get with nix-refetch-url
+      sha256 = "0lghiiiphbkqgiprqirxifldvix0j4k04jh1z9f911shrzjgqq4s"; #get with nix-prefetch-url
     }
   ];
   #to allow threema to store keys and allow persistant login
