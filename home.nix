@@ -18,6 +18,7 @@
     ./home-manager/xkb/xkb.nix
     ./home-manager/joplin/joplin.nix
     ./home-manager/teams/teams.nix
+    ./home-manager/mail/mail.nix
   ]
 ++ lib.optionals  (lib.strings.trim hostName == "viktorPC") [
   ./home-manager/picom/picom.nix

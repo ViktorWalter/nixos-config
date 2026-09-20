@@ -1,1 +1,2 @@
 hosts/viktorPC/nextcloud-hostname.nix filter=git-crypt diff=git-crypt
+home-manager/mail/accounts/** filter=git-crypt diff=git-crypt
