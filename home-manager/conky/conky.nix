@@ -71,7 +71,7 @@ let
     while true; do
       # Find the primary monitor:
       monitor="$(
-        ${pkgs.xorg.xrandr}/bin/xrandr --query |
+        ${pkgs.xrandr}/bin/xrandr --query |
         ${pkgs.gnugrep}/bin/grep ' connected primary ' |
         ${pkgs.gnused}/bin/sed -n \
           's/.* \([0-9][0-9]*\)x\([0-9][0-9]*\)+\(-\?[0-9][0-9]*\)+\(-\?[0-9][0-9]*\).*/\1 \2 \3 \4/p'

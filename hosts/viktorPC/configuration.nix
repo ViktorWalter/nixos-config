@@ -70,8 +70,9 @@
   '';
 
   #Audio
-  hardware.pulseaudio.extraConfig = ''
+  services.pulseaudio.extraConfig = ''
     set-card-profile alsa_card.pci-0000_03_00.1  output:hdmi-stereo-extra4
+    set-default-sink alsa_output.pci-0000_03_00.1.hdmi-stereo-extra4
     '';
 
   #threema

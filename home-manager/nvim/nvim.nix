@@ -657,6 +657,8 @@ in
       nnoremap <leader>oo :delmark a<bar>:norm ma*:%s//_&_/g<bar>:norm `a:delmark a<cr>
       nnoremap <leader>op :delmark a<bar>:norm ma*:%s//&_/g<bar>:norm `a:delmark a<cr>
 
+      unmap gri
+
       " My large subconfig
       if !empty(glob("~/.my.vimrc"))
         source ~/.my.vimrc
