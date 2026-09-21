@@ -46,7 +46,7 @@ let
       own_window_type = 'utility',
       own_window_class = 'conky',
       own_window_transparent = false,
-      own_window_hints = 'undecorated,under,skip_taskbar,skip_pager',
+      own_window_hints = 'undecorated,above,skip_taskbar,skip_pager',
 
       update_interval = 1.0,
 
