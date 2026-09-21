@@ -30,11 +30,15 @@
   # '';
   #
 
-  services.xserver.displayManager.setupCommands = ''
-    ${pkgs.xrandr}/bin/xrandr --output DSI-1 --rotate right
-    ${pkgs.xinput}/bin/xinput set-prop "pointer:Goodix Capacitive TouchScreen" \
+  #set up the tiny display
+  services.xserver = {
+    dpi = 300;
+    displayManager.setupCommands = ''
+      ${pkgs.xrandr}/bin/xrandr --output DSI-1 --rotate right
+      ${pkgs.xinput}/bin/xinput set-prop "pointer:Goodix Capacitive TouchScreen" \
       "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
-  '';
+      '';
+  }
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
