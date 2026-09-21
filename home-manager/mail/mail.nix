@@ -17,12 +17,33 @@ let
     ps.keyring
   ]);
 
+  keyringPassword = pkgs.writeShellApplication {
+    name = "mail-keyring-password";
+    runtimeInputs = [ pythonWithKeyring ];
+    text = ''
+      service="$1"
+      username="$2"
+
+      ${pythonWithKeyring}/bin/python3 - "$service" "$username" <<'PY'
+      import keyring
+      import sys
+
+      service = sys.argv[1]
+      username = sys.argv[2]
+
+      value = keyring.get_password(service, username)
+      if value is None:
+        sys.exit(f"Missing keyring entry: {service}/{username}")
+
+      print(value)
+      PY
+      '';
+  };
+
   oauthToken = pkgs.writeShellApplication {
     name = "mail-oauth-token";
 
-    runtimeInputs = [
-      pythonWithKeyring
-    ];
+    runtimeInputs = [ pythonWithKeyring ];
 
     text = ''
       set -euo pipefail
@@ -173,18 +194,19 @@ let
   gmailToken = 
   "${oauthToken}/bin/mail-oauth-token gmail";
 
+  cyrusSaslWithXoauth2 = pkgs.cyrus_sasl.overrideAttrs (oldAttrs: {
+    buildInputs = (oldAttrs.buildInputs or []) ++ [
+      pkgs.cyrus-sasl-xoauth2
+    ];
 
-  keyringGet = service: ''
-    ${pythonWithKeyring}/bin/python3 -c '
-import keyring
-import sys
-value = keyring.get_password("${service}", "personal")
-if value is None:
-    sys.exit("Missing keyring entry: ${service}/personal")
-print(value)
-'
-  '';
+    postInstall = (oldAttrs.postInstall or "") + ''
+      cp ${pkgs.cyrus-sasl-xoauth2}/lib/sasl2/* $out/lib/sasl2/
+    '';
+  });
 
+  mbsyncWithXoauth2 = pkgs.isync.override {
+    cyrus_sasl = cyrusSaslWithXoauth2;
+  };
 in
 {
 
@@ -213,7 +235,7 @@ in
           trash = null;
         };
 
-        passwordCommand = keyringGet "personal";
+        passwordCommand = "${keyringPassword}/bin/mail-keyring-password personal personal";
 
         imap = {
           host = "${account_info.personal.host}";
@@ -233,13 +255,15 @@ in
           create = "maildir";
           expunge = "none";
 
-          groups.main.channels = {
+          groups.personal.channels = {
             inbox = {
               farPattern = "INBOX";
               nearPattern = "inbox";
 
               extraConfig = {
                 Sync = "Pull";
+                Expunge = "None";
+                Remove = "None";
               };
             };
 
@@ -249,6 +273,8 @@ in
 
               extraConfig = {
                 Sync = "Pull";
+                Expunge = "None";
+                Remove = "None";
               };
             };
           };
@@ -279,7 +305,7 @@ in
 
         maildir.path = "work";
 
-        passwordCommand = keyringGet "work";
+        passwordCommand = "${keyringPassword}/bin/mail-keyring-password work personal";
 
         folders = {
           inbox = "inbox";
@@ -311,12 +337,14 @@ in
           create = "maildir";
           expunge = "none";
 
-          groups.main.channels.inbox = {
+          groups.work.channels.inbox = {
             farPattern = "INBOX";
             nearPattern = "inbox";
 
             extraConfig = {
               Sync = "Pull";
+              Expunge = "None";
+              Remove = "None";
             };
           };
 
@@ -386,12 +414,14 @@ in
           create = "maildir";
           expunge = "none";
 
-          groups.main.channels.inbox = {
+          groups.work_alt.channels.inbox = {
             farPattern = "INBOX";
             nearPattern = "inbox";
 
             extraConfig = {
               Sync = "Pull";
+              Expunge = "None";
+              Remove = "None";
             };
           };
 
@@ -460,13 +490,15 @@ in
             AuthMechs = "XOAUTH2";
           };
 
-          groups.main.channels = {
+          groups.outlook.channels = {
             inbox = {
               farPattern = "Inbox";
               nearPattern = "inbox";
 
               extraConfig = {
                 Sync = "Pull";
+                Expunge = "None";
+                Remove = "None";
               };
             };
 
@@ -476,6 +508,8 @@ in
 
               extraConfig = {
                 Sync = "Pull";
+                Expunge = "None";
+                Remove = "None";
               };
             };
           };
@@ -544,6 +578,17 @@ in
           enable = true;
           create = "maildir";
           expunge = "none";
+
+          groups.gmail.channels.inbox = {
+            farPattern = "INBOX";
+            nearPattern = "inbox";
+            
+            extraConfig = {
+              Sync = "Pull";
+              Expunge = "None";
+              Remove = "None";
+            };
+          };
 
 
           extraConfig.account = {
@@ -628,55 +673,151 @@ in
 
 
 ##########################################################################
-# ALOT
+# AERC
 ##########################################################################
+xdg.configFile."aerc/notmuch-query-map".text = ''
+  Inbox=tag:inbox
+  Personal=tag:inbox and tag:D
+  Work=tag:inbox and tag:F
+  Outlook=tag:inbox and tag:O
+  Gmail=tag:inbox and tag:G
+  Sent=tag:sent
+'';
+programs.aerc = {
+  enable = true;
 
-  programs.alot = {
-    enable = true;
+  extraBinds = {
+    default = builtins.readFile ./aerc_default_bindings.conf;
 
-    settings = {
-      # Shared local Sent Maildir.
-      sent_box = "mail/sent";
+    messages = {
+      q = ":quit<Enter>";
+      x = ":close";
+      "?" = ":prompt 'Search all mail: ' query -n Search<Enter>";
+      A = ":modify-labels -inbox<Enter>";
+    };
 
-      # Keep the UI simple; customize further if desired.
-      editor = "nvim";
+    view = {
+      V = ":pipe -m less<Enter>";
+      A = ":modify-labels -inbox<Enter>";
     };
   };
 
-  services.mbsync = {
-    enable = true;
+  extraConfig = {
+    general = {
+      unsafe-accounts-conf = true;
+    };
 
-    frequency = "*:0/5";
+    ui = {
+      threading-enabled = true;
+      force-client-threads = true;
+      threading-by-subject = true;
 
-    postExec = ''
-      ${pkgs.notmuch}/bin/notmuch new
+    # Newest messages/threads first.
+    sort = "-r date";
+    # Apply the same date ordering to messages within threads.
+    sort-thread-siblings = true;
+    # Keep the thread root at the top, replies below it.
+    reverse-thread-order = false;
+
+    index-columns = "source:1,flags:4,name<20%,subject,date>=";
+    column-source = "{{switch (.Labels | join \" \") (case `(^| )x( |$)` \"X\") (case `(^| )G( |$)` \"G\") (case `(^| )D( |$)` \"D\") (case `(^| )O( |$)` \"O\") (case `(^| )F( |$)` \"F\")}}";
+    # column-flags = "{{.Flags | join \"\"}}";
+    # column-name = "{{index (.From | names) 0}}";
+    # column-subject = "{{.ThreadPrefix}}{{.Subject}}";
+    # column-date = "{{.DateAutoFormat .Date.Local}}";
+
+  };
+
+  compose = {
+    editor = "nvim";
+  };
+
+  filters = {
+    "text/plain" = "colorize";
+    "text/html" = "html | colorize";
+  };
+  };
+
+extraAccounts = {
+  personal = {
+    source = "notmuch://~/mail";
+    default = "Inbox";
+    enable-maildir = true;
+    from = "${personal.name} <${account_info.personal.address}>";
+    query-map = "${config.xdg.configHome}/aerc/notmuch-query-map";
+    folders-sort = "Inbox,Search,Personal,Work,Outlook.Gmail";
+  };
+};
+
+
+  };
+
+programs.mbsync = {
+  enable = true;
+  package = mbsyncWithXoauth2;
+};
+services.mbsync = {
+  enable = true;
+  package = mbsyncWithXoauth2;
+
+  frequency = "*:0/5";
+
+  postExec = ''
+    ${pkgs.notmuch}/bin/notmuch new
     '';
-  };
+};
 
-  # ---------------------------------------------------------------------------
-  # msmtp
-  # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# msmtp
+# ---------------------------------------------------------------------------
 
-  programs.msmtp = {
-    enable = true;
+programs.msmtp = {
+  enable = true;
 
-    # Home Manager normally generates msmtp account sections from
-    # accounts.email.accounts.*.msmtp.
-    #
-    # We deliberately override Alot's send command above because Home Manager
-    # otherwise defaults to msmtpq.
-  };
+# Home Manager normally generates msmtp account sections from
+# accounts.email.accounts.*.msmtp.
+#
+# We deliberately override Alot's send command above because Home Manager
+# otherwise defaults to msmtpq.
+};
 
-  home.activation.createMaildirs =
-  lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  mkdir -p \
-  "${maildirBase}/sent/cur" \
-  "${maildirBase}/sent/new" \
-  "${maildirBase}/sent/tmp"
-  '';
+home.activation.createMaildirs =
+lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+mkdir -p \
+        "${maildirBase}/personal/inbox/cur" \
+        "${maildirBase}/personal/inbox/new" \
+        "${maildirBase}/personal/inbox/tmp" \
+        "${maildirBase}/personal/junk/cur" \
+        "${maildirBase}/personal/junk/new" \
+        "${maildirBase}/personal/junk/tmp" \
+        "${maildirBase}/work/inbox/cur" \
+        "${maildirBase}/work/inbox/new" \
+        "${maildirBase}/work/inbox/tmp" \
+        "${maildirBase}/work_alt/inbox/cur" \
+        "${maildirBase}/work_alt/inbox/new" \
+        "${maildirBase}/work_alt/inbox/tmp" \
+        "${maildirBase}/outlook/inbox/cur" \
+        "${maildirBase}/outlook/inbox/new" \
+        "${maildirBase}/outlook/inbox/tmp" \
+        "${maildirBase}/outlook/inbox_oj/cur" \
+        "${maildirBase}/outlook/inbox_oj/new" \
+        "${maildirBase}/outlook/inbox_oj/tmp" \
+        "${maildirBase}/gmail/inbox/cur" \
+        "${maildirBase}/gmail/inbox/new" \
+        "${maildirBase}/gmail/inbox/tmp" \
+        "${maildirBase}/sent/cur" \
+        "${maildirBase}/sent/new" \
+        "${maildirBase}/sent/tmp"
+        '';
 
-  home.packages = with pkgs; [
-    isync
-  ];
+        home.packages = with pkgs; [
+          (pkgs.writeShellApplication { #add script to load passwords from password-store to python keyring
+           name = "set_mail_passwords";
+           runtimeInputs = [ pkgs.coreutils ];
+           text = builtins.readFile ./set_mail_passwords.sh;
+           })
 
-}
+        ];
+
+
+        }
