@@ -7,6 +7,9 @@
     system = pkgs.stdenv.hostPlatform.system;
     athameZsh = athame-flake.defaultPackage.${system};
     insect = insect-flake.packages.${system}.default;
+    pythonWithModules = pkgs.python3.withPackages (ps: [
+        ps.keyring
+    ]);
   in
 {
   networking.hostName = "${hostName}";
@@ -193,7 +196,7 @@
     mpv
     mpg123
     yt-dlp
-    python3
+    pythonWithModules
     android-tools
     teams-for-linux
     docker
