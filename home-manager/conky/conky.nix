@@ -102,6 +102,7 @@ let
           y=$((my + mh - offset))
 
           ${pkgs.xdotool}/bin/xdotool windowmove "$window" "$x" "$y"
+          ${pkgs.xdotool}/bin/xdotool windowraise "$window"
         fi
       fi
 
