@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    #nixpkgs.url = "github:ViktorWalter/nixpkgs/CVE-2026-35535-patch";
 
     # nixpkgs-old.url = "github:NixOS/nixpkgs/release-24.11";
 
