@@ -56,6 +56,17 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+# Disable X11 server-side screen blanking/DPMS
+services.xserver.serverFlagsSection = ''
+  Option "BlankTime" "0"
+  Option "StandbyTime" "0"
+  Option "SuspendTime" "0"
+  Option "OffTime" "0"
+'';
+# Disable the Linux console (tty) screen blanking
+console.font = "Lat2-Terminus16"; # example, keep your existing value
+boot.kernelParams = [ "consoleblank=0" ];
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.windowManager.i3 = {
@@ -88,9 +99,23 @@
   environment.sessionVariables = {
     XAUTHORITY = "$HOME/.Xauthority";
   };
+
+
   security.sudo.extraConfig = ''
     Defaults env_keep += "DISPLAY XAUTHORITY"
   '';
+
+  security.sudo.extraRules = [
+  {
+    users = [ "viktor" ];
+    commands = [
+    {
+      command = "/home/viktor/.i3/windows";
+      options = [ "NOPASSWD" ];
+    }
+    ];
+  }
+  ];
 
   fonts.fontconfig.allowBitmaps = true;
   fonts.fontconfig.useEmbeddedBitmaps = true;

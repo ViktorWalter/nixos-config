@@ -321,4 +321,5 @@ in
   home.file.".my.i3.config".source = 
     config.lib.file.mkOutOfStoreSymlink
     "${here}/${hostName}-doti3config";
+
 }
