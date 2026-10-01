@@ -105,6 +105,7 @@
     btop-rocm
     davinci-resolve
     amdgpu_top
+    deluge
   ]);
 
 }
