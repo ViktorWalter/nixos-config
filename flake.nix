@@ -73,6 +73,7 @@
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
+            ./sudo-patch.nix
             ./configuration.nix #generic
             ./hosts/${hostName}/configuration.nix #specific
 

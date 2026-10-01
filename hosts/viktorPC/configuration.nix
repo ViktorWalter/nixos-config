@@ -71,6 +71,7 @@
 
   #Audio
   services.pulseaudio.extraConfig = ''
+    unload-module module-switch-on-port-available
     set-card-profile alsa_card.pci-0000_03_00.1  output:hdmi-stereo-extra4
     set-default-sink alsa_output.pci-0000_03_00.1.hdmi-stereo-extra4
     '';
