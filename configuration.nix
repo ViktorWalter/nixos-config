@@ -67,6 +67,10 @@ services.xserver.serverFlagsSection = ''
 console.font = "Lat2-Terminus16"; # example, keep your existing value
 boot.kernelParams = [ "consoleblank=0" ];
 
+systemd.tmpfiles.rules = [
+  "d /mnt/flash 0755 viktor users"
+];
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.windowManager.i3 = {
