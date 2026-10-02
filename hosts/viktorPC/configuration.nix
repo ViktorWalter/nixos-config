@@ -12,7 +12,7 @@
 
   boot.loader.grub.enable = true;
   boot.loader.grub.efiSupport = false;
-  boot.loader.grub.device = "/dev/nvme0n1";
+  boot.loader.grub.device = "/dev/disk/by-id/nvme-INTEL_SSDPEKNW010T8_BTNH846407JQ1P0B";
   boot.loader.grub.useOSProber = true; 
   boot.loader.grub.extraEntries = ''
     menuentry "Windows 10" {
@@ -101,6 +101,7 @@
     blender
     prusa-slicer
     kicad
+    freecad
     obsidian
     btop-rocm
     davinci-resolve

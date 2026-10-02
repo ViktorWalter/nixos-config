@@ -1,4 +1,4 @@
-{ pkgs, ...}:
+{ config, pkgs, ...}:
 {
   programs.password-store = {
     enable = true;
@@ -13,6 +13,15 @@
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
-    pinentry.package = pkgs.pinentry-gnome3;
+    pinentry.package = pkgs.pinentry-gtk2;
+  };
+
+  programs.firefox = {
+    enable = true;
+    nativeMessagingHosts = [
+      (pkgs.passff-host.override {
+       pass = config.programs.password-store.package;
+       })
+    ];
   };
 }
