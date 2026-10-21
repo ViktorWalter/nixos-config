@@ -39,6 +39,10 @@
     };
 
     secretFile = "/etc/nextcloud-secrets.json";
+
+    phpOptions = {
+      "session.uplpad_progress.enabled" = "0";
+    };
   };
 
   services.nginx = {
