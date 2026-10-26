@@ -166,7 +166,6 @@ systemd.tmpfiles.rules = [
     home.stateVersion = "26.05";
   };
 
-  programs.firefox.enable = true;
   programs.dconf.enable = true;
   programs.dconf.profiles.user.databases = [{
     settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
@@ -197,6 +196,7 @@ systemd.tmpfiles.rules = [
   # You can use https://search.nixos.org/ to find more packages (and options).
   #
   environment.systemPackages = (with pkgs; [
+    firefox
     xauth
     wget
     gnumake
@@ -227,7 +227,7 @@ systemd.tmpfiles.rules = [
     yt-dlp
     pythonWithModules
     android-tools
-    teams-for-linux
+    #teams-for-linux
     docker
     wesnoth
     pdfpc

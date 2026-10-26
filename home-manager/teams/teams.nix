@@ -1,15 +1,15 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, nixpkgs-fresh, ... }:
 let
   teamsManifestUrl = "https://teams.cloud.microsoft/manifest.json";
   configFile = "${config.home.homeDirectory}/.local/share/firefoxpwa/config.json";
+  fresh-pkgs = nixpkgs-fresh.legacyPackages.${"x86_64-linux"};
 in
 {
-  home.packages = [ pkgs.firefoxpwa pkgs.jq ];
+  home.packages = [ fresh-pkgs.pkgs.firefoxpwa pkgs.jq ];
 
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts = [ pkgs.firefoxpwa ];
+    nativeMessagingHosts = [ fresh-pkgs.pkgs.firefoxpwa ];
   };
 
   home.activation.setupTeamsPwa = config.lib.dag.entryAfter [ "writeBoundary" ] ''
