@@ -1,8 +1,7 @@
-{ config, pkgs, nixpkgs-fresh, ... }:
+{ config, pkgs, fresh-pkgs, ... }:
 let
   teamsManifestUrl = "https://teams.cloud.microsoft/manifest.json";
   configFile = "${config.home.homeDirectory}/.local/share/firefoxpwa/config.json";
-  fresh-pkgs = nixpkgs-fresh.legacyPackages.${"x86_64-linux"};
 in
 {
   home.packages = [ fresh-pkgs.pkgs.firefoxpwa pkgs.jq ];

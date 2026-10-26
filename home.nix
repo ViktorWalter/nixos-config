@@ -1,4 +1,4 @@
-{ hostName, athame-flake, nixpkgs-legacy-sup, nixpkgs-fresh, config, pkgs, lib, self, ... }:
+{ hostName, athame-flake, nixpkgs-legacy-sup, fresh-pkgs, config, pkgs, lib, self, ... }:
 {
   imports = [
     ./home-manager/zsh/zsh.nix
