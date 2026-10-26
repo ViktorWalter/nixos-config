@@ -10,19 +10,22 @@
       ./nextcloud.nix
     ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.efiSupport = false;
-  boot.loader.grub.device = "/dev/disk/by-id/nvme-INTEL_SSDPEKNW010T8_BTNH846407JQ1P0B";
-  boot.loader.grub.useOSProber = true; 
-  boot.loader.grub.extraEntries = ''
-    menuentry "Windows 10" {
-      insmod part_msdos
-      insmod ntfs
-      insmod chain
-      set root=(hd0,1)
-      chainloader +1
-    }
-  '';
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = false;
+    device = "/dev/disk/by-id/nvme-INTEL_SSDPEKNW010T8_BTNH846407JQ1P0B";
+    useOSProber = true; 
+    extraEntries = ''
+      menuentry "Windows 10" {
+        insmod part_msdos
+          insmod ntfs
+          insmod chain
+          set root=(hd0,1)
+          chainloader +1
+      }
+    '';
+    configurationLimit = 10; #max N old derivations stored
+  };
 
   swapDevices = [
     { device = "/swapfile"; size = 8192; } 
@@ -107,6 +110,7 @@
     davinci-resolve
     amdgpu_top
     deluge
+    lutris
   ]);
 
 }
