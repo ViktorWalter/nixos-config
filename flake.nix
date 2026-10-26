@@ -8,7 +8,7 @@
     # nixpkgs-old.url = "github:NixOS/nixpkgs/release-24.11";
     nixpkgs-legacy-sup.url = "github:NixOS/nixpkgs/nixos-22.11";
 
-    nixpkgs-fresh.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-fresh.url = "github:NixOS/nixpkgs/nixos-unstable";# for packages that need to be bleeding edge
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -46,6 +46,8 @@
     let
  	    system = "x86_64-linux";
 
+      fresh-pkgs = nixpkgs-fresh.legacyPackages.${system};
+
       my-scripts-package = nixpkgs.legacyPackages.${system}.runCommand "my-scripts" {} ''
         mkdir -p $out/bin
 
@@ -73,7 +75,7 @@
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup nixpkgs-fresh insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
+          specialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
@@ -85,7 +87,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup nixpkgs-fresh self; }; 
+              home-manager.extraSpecialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup fresh-pkgs self; }; 
               home-manager.users.viktor = import ./home.nix;
             }
 
