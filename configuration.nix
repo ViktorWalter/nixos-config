@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, hostName, athame-flake, insect-flake, my-scripts-package, klaxalk-scripts-package,... }:
+{ config, pkgs, fresh-pkgs, hostName, athame-flake, insect-flake, my-scripts-package, klaxalk-scripts-package,... }:
   let
     system = pkgs.stdenv.hostPlatform.system;
     athameZsh = athame-flake.defaultPackage.${system};
@@ -214,7 +214,6 @@ systemd.tmpfiles.rules = [
     pavucontrol
     octave
     xfce4-notifyd
-    vesktop
     cava
     conky
     krita
@@ -252,6 +251,8 @@ systemd.tmpfiles.rules = [
     freetype
     usbutils
     lm_sensors
+    ]) ++ (with fresh-pkgs; [
+    vesktop
     ]) ++ [
     insect
     my-scripts-package

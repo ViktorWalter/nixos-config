@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, ... }:
+{ config, pkgs, fresh-pkgs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -26,6 +26,8 @@
     '';
     configurationLimit = 10; #max N old derivations stored
   };
+
+  #boot.kernelPackages = fresh-pkgs.linuxPackages_latest_hardened;
 
   swapDevices = [
     { device = "/swapfile"; size = 8192; } 
@@ -111,6 +113,8 @@
     amdgpu_top
     deluge
     lutris
+    lmstudio
+    discord
   ]);
 
 }

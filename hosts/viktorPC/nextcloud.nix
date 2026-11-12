@@ -5,6 +5,7 @@
   #nextcloud config
   services.nextcloud = {
     enable = true;
+    # enable = false;
     package = pkgs.nextcloud33;
     hostName = import ./nextcloud-hostname.nix;
     datadir = "/var/lib/nextcloud/data";

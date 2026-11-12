@@ -18,19 +18,19 @@ let
     hash = "sha256-6jtMktB6MR35WucRi8ZVdO3kyEpQEpdhqPYBI0uSk04=";
   };
   elementumBinary = fetchurl {
-    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/master/linux_x64/elementum";
-    hash = "sha256-hZ0K9tR07qvwrby1PlCEDggXWvD3dlilVFJ/8VPqjmQ=";
+    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/v0.1.119/linux_x64/elementum";
+    hash = "sha256-VfrD06EP/KYSnnA67xPxxRvFvpol6wPERfFByqQdDcA=";
   };
   elementumLibrary = fetchurl {
-    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/master/linux_x64/elementum.so";
-    hash = "sha256-TXQAD3+s/oiH1CJuFiY8YVqqp9itBNyVZCNoojsr8Qk=";
+    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/v0.1.119/linux_x64/elementum.so";
+    hash = "sha256-vAvp2gFQ9WHZzKrQl3AtvhS4MiUfpGSEu313QHfiUvw=";
   };
   elementumHeader = fetchurl {
-    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/master/linux_x64/elementum.h";
-    hash = "sha256-bwtrzGCJQauaMy4EfcE80iRnPxdHvFkHXC7Rkd0gpik=";
+    url = "https://raw.githubusercontent.com/elgatito/elementum-binaries/v0.1.119/linux_x64/elementum.h";
+    hash = "sha256-FPFg62449BJSB3wMIn7LvXvbLRWeSBsGXxq0XKBXDIQ=";
   };
   elementumLicense = fetchurl {
-    url = "https://raw.githubusercontent.com/fugkco/repository.elementumorg/refs/heads/master/LICENSE";
+    url = "https://raw.githubusercontent.com/fugkco/repository.elementumorg/refs/heads/deb4385/LICENSE";
     hash = "sha256-5u/KXjuHRG7sgI13wSvVzwoaiqDN4HVBxUao0oK7rFs=";
   };
 in
