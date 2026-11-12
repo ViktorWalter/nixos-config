@@ -27,7 +27,7 @@
     configurationLimit = 10; #max N old derivations stored
   };
 
-  #boot.kernelPackages = fresh-pkgs.linuxPackages_latest_hardened;
+  boot.kernelPackages = fresh-pkgs.linuxPackages_7_3;
 
   swapDevices = [
     { device = "/swapfile"; size = 8192; } 
@@ -72,6 +72,7 @@
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DP-3 --right-of HDMI-1
     ${pkgs.xrandr}/bin/xrandr --output HDMI-1 --primary
+    ${pkgs.xrandr}/bin/xrandr --output HDMI-1 --set "Broadcast RGB" "Full"
   '';
 
   #Audio
