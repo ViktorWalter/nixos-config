@@ -14,7 +14,8 @@ let
 
   sources = [
     "fix_xapian.sh"
-    "signature_"
+    "signature_work"
+    "signature_plain"
     "config.yaml"
     "sources.yaml"
     "colors.yaml"
