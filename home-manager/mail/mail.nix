@@ -86,6 +86,12 @@ in
     supPackage
     pkgs.w3m # used by .sup/hooks/mime-decode.rb
     pkgs.perlPackages.FileMimeInfo # provides `mimeopen`, used by .sup/hooks/mime-view.rb
+
+    (pkgs.writeShellApplication { #add script to load passwords from password-store to python keyring
+     name = "set_mail_passwords";
+     runtimeInputs = [ pkgs.coreutils ];
+     text = builtins.readFile ./set_mail_passwords.sh;
+     })
   ];
 
   home.file = lib.listToAttrs (map (f: {
@@ -95,4 +101,5 @@ in
       executable = lib.hasSuffix ".sh" f;
     };
   }) sources);
+
 }
