@@ -40,7 +40,7 @@ in
     # package added to its propagatedBuildInputs, mirroring what
     # configuration.nix already does for the interactive system Python.
     package = pkgs.offlineimap.overridePythonAttrs (old: {
-      propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.python3Packages.keyring ];
+      dependencies = old.dependencies ++ [ pkgs.python3Packages.keyring ];
     });
 
     # Equivalent to the original ~/.offlineimap.py: all password/token
