@@ -6,7 +6,7 @@
     #nixpkgs.url = "github:ViktorWalter/nixpkgs/CVE-2026-35535-patch";
 
     # nixpkgs-old.url = "github:NixOS/nixpkgs/release-24.11";
-    nixpkgs-legacy-sup.url = "github:NixOS/nixpkgs/nixos-22.11";
+    # nixpkgs-legacy-sup.url = "github:NixOS/nixpkgs/nixos-22.11";
 
     nixpkgs-fresh.url = "github:NixOS/nixpkgs/nixos-unstable";# for packages that need to be bleeding edge
 
@@ -28,6 +28,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sup-flake = {
+      url = "github:ViktorWalter/sup-flake";
+    };
+
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     my-scripts-repo = {
@@ -42,7 +46,7 @@
 
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake, nixpkgs-legacy-sup, nixpkgs-fresh, insect-flake, nix-flatpak, my-scripts-repo, klaxalk-scripts-repo, ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, nixpkgs-fresh, insect-flake, sup-flake, nix-flatpak, my-scripts-repo, klaxalk-scripts-repo, ... }:
     let
  	    system = "x86_64-linux";
 
@@ -75,7 +79,7 @@
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
+          specialArgs = { inherit hostName athame-flake fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
@@ -87,7 +91,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit hostName athame-flake nixpkgs-legacy-sup fresh-pkgs self; }; 
+              home-manager.extraSpecialArgs = { inherit hostName athame-flake fresh-pkgs self sup-flake; }; 
               home-manager.users.viktor = import ./home.nix;
             }
 

@@ -116,7 +116,55 @@
     lutris
     lmstudio
     discord
-  ]);
+    cinny-desktop
+    claude-code
+  ]) ++
+  ( with fresh-pkgs; [
+    opencode
+    opencode-claude-auth
+  ]
+  )
+  ;
+  
+  services.llama-cpp = {
+    enable = true;
+# Pick ONE package depending on your GPU backend:
+    package = pkgs.llama-cpp-rocm;      # AMD ROCm (you already have hardware.amdgpu.opencl.enable)
+  # package = pkgs.llama-cpp-vulkan; # fallback if ROCm misbehaves on your card
+
+    port = 8090;
+    modelsPreset = {
+      "Qwen3.8-27B" = {
+        hf-repo = "unsloth/Qwen3.8-27B-GGUF";
+        hf-file = "Qwen3.8-27B-UD-Q3_K_XL.gguf";   # 3-bit dynamic quant
+          alias = "qwen3.8-27b-3bit";                 # name exposed via the API
+          temp = "0.7";
+        top-p = "0.8";
+        top-k = "20";
+        presence-penalty = "1.5"; 
+
+        flash-attn = "on";
+        cache-type-k = "q8_0";
+        cache-type-v = "q8_0";
+
+        reasoning-budget = "2048";
+        
+        no-mmproj = "true";
+        ctx-size = "32768";   # total context window, in tokens
+        parallel = "1";       # don't split it across concurrent slots
+        batch-size = "512";
+        ubatch-size = "512";
+
+        no-cache-prompt = "true";   # actually disables checkpoint/prompt-cache reuse
+
+        #no-kv-offload = "true";   # KV cache lives in system RAM
+        mlock = "true";           # pin weights in RAM, never paged out
+
+        threads = "6";
+        threads-batch = "12";
+      };
+    };
+  };
 
 }
 
