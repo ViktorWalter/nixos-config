@@ -4,3 +4,4 @@ home-manager/mail/sup/config.yaml filter=git-crypt diff=git-crypt
 home-manager/mail/sup/sources.yaml filter=git-crypt diff=git-crypt
 home-manager/mail/sup/signature_* filter=git-crypt diff=git-crypt
 home-manager/mail/set_mail_passwords.sh filter=git-crypt diff=git-crypt
+home-manager/git/git.nix filter=git-crypt diff=git-crypt
