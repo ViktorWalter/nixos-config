@@ -251,6 +251,7 @@ systemd.tmpfiles.rules = [
     freetype
     usbutils
     lm_sensors
+    toilet
     ]) ++ (with fresh-pkgs; [
     vesktop
     ]) ++ [
