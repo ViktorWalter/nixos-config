@@ -12,6 +12,36 @@
 let
   supPackage = sup-flake.packages.${pkgs.system}.sup;
 
+  # Source of https://github.com/UvA-FNWI/M365-IMAP, pinned to a commit.
+  # Provides get_token.py (initial OAuth2 login) and refresh_token.py
+  # (used from the offlineimap pythonFile below as get_m365_token()).
+  m365ImapSrc = pkgs.fetchFromGitHub {
+    owner = "UvA-FNWI";
+    repo = "M365-IMAP";
+    rev = "74094a25a15884b1e713eb9009eaaf841005e6eb";
+    sha256 = "0qx5q7dhvwfbdxpy57w2dw0y83md2lxr0bhyacrzzzgadfzyiari";
+  };
+
+  # Shared interpreter for both get_token.py and refresh_token.py (called
+  # from the offlineimap pythonFile below) - both import `msal`, which a
+  # plain `python3` found on $PATH at runtime is not guaranteed to have.
+  m365ImapPython = pkgs.python3.withPackages (ps: [ ps.msal ]);
+
+  # get_token.py imports `config` (shipped alongside it in the repo) and
+  # `msal`, and writes its token files (named in config.py) relative to the
+  # current working directory - so this wrapper cds into the same directory
+  # that get_m365_token() reads refresh_token.py's output from, before
+  # running the script from the Nix store.
+  m365ImapGetToken = pkgs.writeShellApplication {
+    name = "get_token.py";
+    runtimeInputs = [ m365ImapPython ];
+    text = ''
+      mkdir -p "$HOME/.local/share/m365-imap"
+      cd "$HOME/.local/share/m365-imap"
+      exec python3 ${m365ImapSrc}/get_token.py
+    '';
+  };
+
   sources = [
     "fix_xapian.sh"
     "signature_work"
@@ -49,11 +79,15 @@ in
     # accounts.nix, so nothing else is needed here.
     pythonFile = ''
       import keyring
-      # import subprocess
+      import subprocess
 
-      # def get_token(email_address):
-      #     return subprocess.run(["oama", "access", email_address], capture_output=True, text=True).stdout
-    '';
+      def get_m365_token():
+        return subprocess.run(
+            ["${m365ImapPython}/bin/python3", "refresh_token.py"],
+            cwd="/home/viktor/.local/share/m365-imap",
+            capture_output=True, text=True, check=True,
+            ).stdout.split()[0]
+        '';
 
     extraConfig.general = {
       ui = "ttyui";
@@ -83,6 +117,10 @@ in
     # interactive system Python (see configuration.nix's pythonWithModules).
     pkgs.python3Packages.keyring
 
+    # `get_token.py` from M365-IMAP, for the one-off interactive OAuth2
+    # login needed before get_m365_token() (above) can refresh tokens.
+    m365ImapGetToken
+
     supPackage
     pkgs.w3m # used by .sup/hooks/mime-decode.rb
     pkgs.perlPackages.FileMimeInfo # provides `mimeopen`, used by .sup/hooks/mime-view.rb
@@ -100,6 +138,14 @@ in
       source = ./sup/${f};
       executable = lib.hasSuffix ".sh" f;
     };
-  }) sources);
+  }) sources) // {
+    # Static M365-IMAP support files that refresh_token.py / get_m365_token()
+    # expect to find by relative name in ~/.local/share/m365-imap (alongside
+    # the token files that get_token.py/refresh_token.py write there at
+    # runtime, which are intentionally left unmanaged here - home-manager
+    # would otherwise symlink them read-only into the Nix store).
+    ".local/share/m365-imap/refresh_token.py".source = "${m365ImapSrc}/refresh_token.py";
+    ".local/share/m365-imap/config.py".source = "${m365ImapSrc}/config.py";
+  };
 
 }
