@@ -228,7 +228,6 @@ systemd.tmpfiles.rules = [
     android-tools
     #teams-for-linux
     docker
-    wesnoth
     pdfpc
     ffmpeg-full
     inetutils
@@ -254,6 +253,7 @@ systemd.tmpfiles.rules = [
     toilet
     ]) ++ (with fresh-pkgs; [
     vesktop
+    wesnoth
     ]) ++ [
     insect
     my-scripts-package
