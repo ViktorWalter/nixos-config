@@ -15,6 +15,10 @@
     efiSupport = false;
     device = "/dev/disk/by-id/nvme-INTEL_SSDPEKNW010T8_BTNH846407JQ1P0B";
     useOSProber = true; 
+    gfxmodeBios = "auto";
+    extraConfig = ''
+      set gfxpayload=keep
+    '';
     extraEntries = ''
       menuentry "Windows 10" {
         insmod part_msdos
@@ -114,7 +118,6 @@
     amdgpu_top
     deluge
     lutris
-    lmstudio
     discord
     cinny-desktop
     claude-code
