@@ -15,7 +15,7 @@ in
     syntaxHighlighting.enable = true;
     history.size = 10000;
     shellAliases = {
-      ll = "ls -la";
+      ll = "ls -lah";
       sb = "source ~/.zshrc";
       ra = "ranger";
       vim = "runVim";
