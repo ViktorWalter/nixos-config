@@ -98,7 +98,9 @@ systemd.tmpfiles.rules = [
     };
   };
   users.users.viktor.openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDVqzZTQZj4xpYQeqah6QrXDqgvSBGYdDi3o7ahqzfOi82tN1u/3qsR61q9AEg26A6hPRiiZWl6x4UUInTob7P9qEqatUU5r6AWTu0ky/YYYU0348u1iK3RK1fVtr4/Qu9ZMuI9tRJHUYAoSu2QdAlq7BI79QaIdoqOPVlBnppSvaNdx73lWI2vsxQDY39DEkA1rSmhwNLwjYybTr9bHsVjUUJWy26xlrJ79rLhbMC/QEgSbnXOsG7zq2EI0Y//8PgHkTb6zVEqIDTZSRds1P2XA9oAFSwYPj1gMPt1iTgxoonMob1yRt+1P1ofhdNAy2Gl6GIUErS2H6pI3i+0O/D21s70hP9D+K9NILXXBsr36ssUauvNHeojkgKz6C5zXDvr1jRAeHdG8xxeje0s5Dr4+Q6xGPxhN8IFOjZJBtVHFMV0Dr4apOggpOG/uRTXhWBDQeUY4OYi94+lqeRQykno6ABZ8j2AITa1CXPz/DEuMwZuWwogq+lBfzv9snEqwCs= Null"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6E+4rmYB3dVw3DRXXdxIJHgtX2ZBdSUBA8JFvt8cBW viktorGPD"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRO5hxZT1m5yAeS/CKGklNOWJrx9ybIciz97lBz6qhf viktorTP"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBBABlNcNbS94Jca0Y3K8OChSYL2Va3fw14BagW0yxhy Desktop"
     ];
   environment.sessionVariables = {
     XAUTHORITY = "$HOME/.Xauthority";
