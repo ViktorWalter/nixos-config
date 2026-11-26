@@ -6,7 +6,7 @@ let
   here = realRoot + relative;
 in
 {
-  home.packages = [ pkgs.font-awesome ];
+  home.packages = [ pkgs.font-awesome_5 ];
   home.file.".i3" = {
     source = ./doti3;
     recursive = false;
@@ -43,7 +43,7 @@ in
       set $mod3 Mod5
       set $mod4 Mod4
 
-      font pango:Terminus, Font Awesome 7 Free 9
+      font pango:Terminus, Font Awesome 5 Free 9
 
       # Use Mouse+$mod to drag floating windows to their wanted position
       floating_modifier $mod

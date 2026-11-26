@@ -32,7 +32,7 @@ exec_always --no-startup-id "killall picom; picom"
 bar {
   status_command i3blocks -c ~/.i3/i3blocks.conf
     tray_output primary
-    font pango: Terminus , Font Awesome 7 Free Bold 13
+    font pango: Terminus , Font Awesome 5 Free Bold 13
     height 25
 
     bindsym button4 nop
