@@ -53,7 +53,7 @@
  	    system = "x86_64-linux";
 
       fresh-pkgs = nixpkgs-fresh.legacyPackages.${system};
-
+      
       my-scripts-package = nixpkgs.legacyPackages.${system}.runCommand "my-scripts" {} ''
         mkdir -p $out/bin
 
@@ -78,10 +78,15 @@
           $out/bin/mrs_commons.sh
       '';
 
+      ros-pkgs = import ros-overlay.inputs.nixpkgs { #so that ROS doesn't have to build from scratch with my nixpkgs
+        inherit system;
+        overlays = [ ros-overlay.overlays.default ];
+      };
+
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package ros-overlay; };
+          specialArgs = { inherit hostName athame-flake fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package ros-overlay ros-pkgs; };
           modules = [
             nix-flatpak.nixosModules.nix-flatpak
             ./overlays/sudo-patch.nix # against CVE-2026-35535
