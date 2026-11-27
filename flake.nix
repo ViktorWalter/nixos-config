@@ -44,9 +44,11 @@
       flake = false;
     };
 
+    ros-overlay.url = "github:lopsided98/nix-ros-overlay/master";
+
   };
 
-  outputs = { self, nixpkgs, home-manager, athame-flake, nixpkgs-fresh, insect-flake, sup-flake, nix-flatpak, my-scripts-repo, klaxalk-scripts-repo, ... }:
+  outputs = { self, nixpkgs, home-manager, athame-flake, nixpkgs-fresh, insect-flake, sup-flake, nix-flatpak, my-scripts-repo, klaxalk-scripts-repo, ros-overlay, ... }:
     let
  	    system = "x86_64-linux";
 
@@ -79,11 +81,11 @@
       mkHost = { hostName, system ? "x86_64-linux" }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit hostName athame-flake fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package; };
+          specialArgs = { inherit hostName athame-flake fresh-pkgs insect-flake nix-flatpak my-scripts-package klaxalk-scripts-package ros-overlay; };
           modules = [
-            # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
             ./overlays/sudo-patch.nix # against CVE-2026-35535
+            ./overlays/ros.nix
             ./configuration.nix #generic
             ./hosts/${hostName}/configuration.nix #specific
 
