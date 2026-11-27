@@ -16,9 +16,9 @@ alias cdphone='. ~/localpath/cdphone'
 
 export PATH=$PATH:/home/viktor/localpath/
 export PATH=$PATH:/home/viktor/localpath/scripts
-for d in /home/viktor/localpath/scripts/*/; do; 
-  export PATH=$PATH:${d}
-done
+#for d in /home/viktor/localpath/scripts/*/; do; 
+#  export PATH=$PATH:${d}
+#done
 
 source mrs_commons.sh
 
@@ -35,14 +35,14 @@ alias mw=mount_windata.sh
 echo "TODO:"                                                                                                                                             
 cat ~/todo.txt | grep -v "#"
 
-if [[ ! -z `xsetwacom --list devices | head -n1` ]]; then  
-  xsetwacom --set "Wacom Intuos S Pad pad" Button +1 "key ctrl" "key z" 
-  xsetwacom --set "Wacom Intuos S Pad pad" Button +2 "key ctrl" "key shift" "key z" 
-  xsetwacom --set "Wacom Intuos S Pad pad" Button +3 "key ctrl" "key s" 
-  xsetwacom --set "Wacom Intuos S Pad pad" Button +8 "key e" 
-  xsetwacom --set "Wacom Intuos S Pen stylus" Mode "Relative"
-  # xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput DisplayPort-2
-fi
+#if [[ ! -z `xsetwacom --list devices | head -n1` ]]; then  
+#  xsetwacom --set "Wacom Intuos S Pad pad" Button +1 "key ctrl" "key z" 
+#  xsetwacom --set "Wacom Intuos S Pad pad" Button +2 "key ctrl" "key shift" "key z" 
+#  xsetwacom --set "Wacom Intuos S Pad pad" Button +3 "key ctrl" "key s" 
+#  xsetwacom --set "Wacom Intuos S Pad pad" Button +8 "key e" 
+#  xsetwacom --set "Wacom Intuos S Pen stylus" Mode "Relative"
+#  # xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput DisplayPort-2
+#fi
 
 export UAV_NAME="uav1" 
 export NATO_NAME="" # lower-case name of the UAV frame {alpha, bravo, charlie, ...}
@@ -77,3 +77,5 @@ export PATH="$PATH:/opt/rocm/bin"
 export ROS_DOMAIN=66
 
 export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share
+
+export PATH="$HOME/.local/bin:$PATH"

@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, fresh-pkgs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -38,7 +38,7 @@
       ${pkgs.xinput}/bin/xinput set-prop "pointer:Goodix Capacitive TouchScreen" \
       "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
       '';
-  }
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -54,7 +54,15 @@
     libgpiod
     python313Packages.gpiod
     brightnessctl 
-  ]);
+    claude-code
+  ]) ++
+  ( with fresh-pkgs; [
+    opencode
+    opencode-claude-auth
+  ]
+  )
+  ;
+  nixpkgs.config.allowUnfree = true;
 
   systemd.services.wpa_supplicant.serviceConfig = {
     ProtectHome = lib.mkForce "no";
@@ -89,5 +97,6 @@
 
   services.udev.packages = [ pkgs.brightnessctl ];
   users.users.viktor.extraGroups = [ "video" ];
+
 }
 
