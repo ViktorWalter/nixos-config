@@ -253,6 +253,9 @@ systemd.tmpfiles.rules = [
     usbutils
     lm_sensors
     toilet
+    gsettings-desktop-schemas
+    glib
+    cacert
     ]) ++ (with fresh-pkgs; [
     vesktop
     wesnoth

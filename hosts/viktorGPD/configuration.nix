@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -49,12 +49,22 @@
 
   #services.upower.enable = true;
   environment.systemPackages = (with pkgs; [
-    geteduroam
+    geteduroam-cli
     tlp
     libgpiod
     python313Packages.gpiod
     brightnessctl 
   ]);
+
+  systemd.services.wpa_supplicant.serviceConfig = {
+    ProtectHome = lib.mkForce "no";
+    ProtectSystem = lib.mkForce "no";
+  };
+  systemd.services.NetworkManager.serviceConfig = {
+    ProtectHome = lib.mkForce "no";
+    ProtectSystem = lib.mkForce "no";
+  };
+  networking.networkmanager.logLevel = "TRACE";
 
   boot.kernelPackages = pkgs.linuxPackages_6_12;
 

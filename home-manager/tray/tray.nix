@@ -17,17 +17,27 @@ in
 
   services.network-manager-applet.enable = true;
   services.blueman-applet.enable = true;
-  services.pasystray = {
-    enable = true;
-    extraOptions = [
-      "-g"
-    ];
+
+  home.packages = lib.optional (cbatticonPackage != null) cbatticonPackage ++ [ pkgs.pa_applet ];
+
+# pulse audio indicator
+  systemd.user.services.pa-applet = {
+    Unit = {
+      Description = "PulseAudio system tray applet";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.pa_applet}/bin/pa-applet";
+      Restart = "on-failure";
+      RestartSec = 1;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
   };
 
-
 #battery indicator
-home.packages = lib.optional (cbatticonPackage != null) cbatticonPackage;
-
   systemd.user.services.cbatticon = lib.mkIf (cbatticonPackage != null) {
     Unit = {
       Description = "Battery tray icon"
