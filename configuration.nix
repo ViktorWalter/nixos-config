@@ -192,6 +192,9 @@
     zip
     unzip
     lm_sensors
+    gsettings-desktop-schemas
+    glib
+    cacert
   ]) ++ [
     insect
     my-scripts-package

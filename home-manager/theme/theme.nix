@@ -1,4 +1,4 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 let
   i3Dir = "${config.home.homeDirectory}/.i3";
 in
@@ -23,5 +23,5 @@ in
   };
 
   services.dunst.settings.global.icon_theme = "Cold Night";
-
+  #home.packages = [ pkgs.gsettings-desktop-schemas pkgs.glib ];
 }

@@ -27,7 +27,7 @@ in
       exec --no-startup-id nm-applet
       exec --no-startup-id blueman-applet
       exec --no-startup-id "sleep 2;  pulseaudio --start"
-      exec --no-startup-id "sleep 3; pa-applet"
+#      exec --no-startup-id "sleep 3; pa-applet"
 #      exec --no-startup-id cbatticon
       exec_always  --no-startup-id  ~/.i3/my_autoname_workspaces.py &
       exec_always  --no-startup-id ~/.i3/conky/conky_start
@@ -231,9 +231,11 @@ in
       bindsym --release $mod4+BackSpace exec --no-startup-id xdotool key --clearmodifiers XF86AudioMute
 
       # screen brightness
-      bindsym $mod+F1 exec xbacklight -dec 10
-      bindsym $mod+F3 exec xbacklight -set 0
-      bindsym $mod+F4 exec xbacklight -set 100
+      # bindsym $mod+F1 exec xbacklight -dec 10
+      # bindsym $mod+F3 exec xbacklight -set 0
+      # bindsym $mod+F4 exec xbacklight -set 100
+      bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
+      bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 
       bindsym $mod+Shift+p exec ~/.i3/swapLayout.sh
       bindsym $mod+Shift+o exec ~/.i3/externOnly.sh
