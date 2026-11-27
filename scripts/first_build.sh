@@ -12,8 +12,8 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FLAKE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+FLAKE_DIR="/etc/nixos"
+SCRIPT_DIR="${FLAKE_DIR}/scripts"
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <hostName>" >&2

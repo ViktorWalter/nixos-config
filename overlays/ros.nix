@@ -15,6 +15,13 @@
      rviz2
      rqt-common-plugins
      tf2-tools
+     # Without this, rqt plugins (e.g. rqt_image_view) fail with
+     # "No module named 'PyQt5.QtCore'": python-qt-binding's
+     # propagatedBuildInputs resolves to pyqt5's `dev` output instead of
+     # its `out` output, so the real PyQt5 bindings never get merged into
+     # the environment (only pyqt5-sip's small helper module does).
+     # Adding pyqt5 explicitly here fills in the missing files.
+     ros-pkgs.python3Packages.pyqt5
      ];
      })
   ];
