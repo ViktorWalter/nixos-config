@@ -83,7 +83,7 @@
           modules = [
             # { nixpkgs.overlays = [ athameOverlay ]; }
             nix-flatpak.nixosModules.nix-flatpak
-            ./patches/sudo-patch.nix # against CVE-2026-35535
+            ./overlays/sudo-patch.nix # against CVE-2026-35535
             ./configuration.nix #generic
             ./hosts/${hostName}/configuration.nix #specific
 
