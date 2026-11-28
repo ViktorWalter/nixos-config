@@ -47,6 +47,9 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
 
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true; # or whatever your login PAM service is called (e.g. "sddm", "gdm", "greetd")
+
   #services.upower.enable = true;
   environment.systemPackages = (with pkgs; [
     geteduroam-cli

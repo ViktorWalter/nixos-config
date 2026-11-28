@@ -24,6 +24,7 @@ source mrs_commons.sh
 
 alias vpn=mullvad
 alias sup='xdotool getactivewindow set_window --classname "mail"; RUBYOPT="-W0" sup'
+alias flog="git-forest.sh --all --date=relative --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --style=15"
 
 totd () {
   cd ~/Games/TotD

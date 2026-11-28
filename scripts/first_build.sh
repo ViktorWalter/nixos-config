@@ -29,6 +29,10 @@ if ! grep -qE "\\b${hostName}\\b[[:space:]]*=[[:space:]]*mkHost" "${FLAKE_DIR}/f
   [[ "$reply" =~ ^[Yy]$ ]] || exit 1
 fi
 
+"${SCRIPT_DIR}/import-key.sh" "${FLAKE_DIR}/gckey"
+
 "${SCRIPT_DIR}/prime-ros-cache.sh" "${hostName}"
 
 sudo nixos-install --flake "${FLAKE_DIR}#${hostName}"
+
+rm "${FLAKE_DIR}/gckey"
