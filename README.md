@@ -67,9 +67,10 @@ In this example our two partitions are `sda1` and `sda2` from device `sda`. Repl
 <summary>Build the system and reboot</summary>
   
 12. connect to internet - if only WiFi is available do e.g. `nmcli device wifi connect SSID password PASSWORD`
-13. `./scripts/first_build.sh currHostName`
-14. when prompted, insert root password
-15. `sudo reboot` to new OS installation, remove flash drive
+13. bring the git-crypt key into `/etc/nixos` with the filename `gckey`
+14. `./scripts/first_build.sh currHostName`
+15. when prompted, insert root password
+16. `sudo reboot` to new OS installation, remove flash drive
 </details>
 
 ### Post installation steps

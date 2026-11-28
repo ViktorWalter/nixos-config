@@ -57,19 +57,19 @@ systemctl restart nix-daemon
 sleep 1
 systemctl is-active --quiet nix-daemon && echo "nix-daemon is active."
 
-echo "== Step 3: dry-run build for nixosConfigurations.${HOST} =="
-DRY_RUN_LOG="$(mktemp -t ros-cache-dry-run.XXXXXX.log)"
-nix build \
-  "${FLAKE_DIR}#nixosConfigurations.${HOST}.config.system.build.toplevel" \
-  --dry-run -L 2>&1 | tee "$DRY_RUN_LOG"
-
-echo
-echo "== Done =="
-echo "Log saved to: $DRY_RUN_LOG"
-echo "Look at the output above:"
-echo "  - lines like 'these N paths will be fetched' -> good, cache is working"
-echo "  - lines like 'these N derivations will be built' -> still a mismatch,"
-echo "    e.g. ros-pkgs doesn't match what's published to the cache."
-echo
-echo "If it looks good, continue with your install/switch command"
-echo "(e.g. 'sudo nixos-install --flake /etc/nixos#<hostName>' or 'sudo nixos-rebuild switch')."
+# echo "== Step 3: dry-run build for nixosConfigurations.${HOST} =="
+# DRY_RUN_LOG="$(mktemp -t ros-cache-dry-run.XXXXXX.log)"
+# nix build \
+#   "${FLAKE_DIR}#nixosConfigurations.${HOST}.config.system.build.toplevel" \
+#   --dry-run -L 2>&1 | tee "$DRY_RUN_LOG"
+#
+# echo
+# echo "== Done =="
+# echo "Log saved to: $DRY_RUN_LOG"
+# echo "Look at the output above:"
+# echo "  - lines like 'these N paths will be fetched' -> good, cache is working"
+# echo "  - lines like 'these N derivations will be built' -> still a mismatch,"
+# echo "    e.g. ros-pkgs doesn't match what's published to the cache."
+# echo
+# echo "If it looks good, continue with your install/switch command"
+# echo "(e.g. 'sudo nixos-install --flake /etc/nixos#<hostName>' or 'sudo nixos-rebuild switch')."
